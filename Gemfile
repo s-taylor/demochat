@@ -55,6 +55,8 @@ group :development do
   gem 'binding_of_caller'
 end
 
+gem 'devise'
+
 #prevent mass assignment to attributes not explicitly allowed
 gem 'protected_attributes'
 

@@ -5,7 +5,7 @@ development:
   encoding: unicode
   database: demochat_development
   pool: 5
-  username: Nizmox
+  username: NixSiow
   password:
 
 # test:
