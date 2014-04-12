@@ -10,10 +10,10 @@ $(document).ready(function () {
   // when the page loads, get the messages
   demoChat.getMessages();
 
-  // setup our timer to check for new messages
-  // demoChat.messageTimer = setInterval(function () {
-  //   demoChat.pageUpdate();
-  // },3000);
+  // setup our timer to check for new messages automatically
+  demoChat.messageTimer = setInterval(function () {
+    demoChat.getMessages();
+  },3000);
 
   //add event handler to monitor the input box
   $('#msg-form').on('submit', function (event) {
@@ -21,6 +21,7 @@ $(document).ready(function () {
     event.preventDefault();
     // grab text from the input box
     var msgText = $msgInput.val();
+    // grab the room id from our form
     var msgRoom = $msgRoom.val();
     //clear the input box
     $msgInput.val('');
