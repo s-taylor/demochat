@@ -4,11 +4,30 @@ class MessagesController < ApplicationController
   before_filter :authenticate_user!, :only => [:create]
   
   def index
-    @messages = Message.all
+
+  end
+
+  def create
+    message = current_user.messages.new(params[:message])
+
+    if message.save
+      render :json => message.to_json
+    else
+      render :json => false
+    end
+  end
+
+  #to handle json requests for message data
+  def fetch
+
+    lastMsgID = params["lastMsgID"]
+
+    @messages = Message.where("id > #{lastMsgID}")
 
     response = {}
     @messages.each_with_index do |message,index|
       msg_hash = {}
+      msg_hash["id"] = message.id
       msg_hash["text"] = message.text
       msg_hash["date"] = message.created_at
       msg_hash["username"] = message.user.username
@@ -16,23 +35,7 @@ class MessagesController < ApplicationController
     end
 
     respond_to do |format|
-      format.html
       format.json {render :json => response}
-    end
-  end
-
-  def create
-    message = current_user.messages.new(params[:message])
-
-    msg_hash = {}
-    msg_hash["text"] = message.text
-    msg_hash["date"] = message.created_at
-    msg_hash["username"] = message.user.username
-
-    if message.save
-      render :json => msg_hash.to_json
-    else
-      render :json => false
     end
   end
 
