@@ -65,3 +65,6 @@ gem 'underscore-rails'
 
 #to annotate our models
 gem 'annotate'
+
+#to allow better timestamp formatting
+gem 'momentjs-rails'
