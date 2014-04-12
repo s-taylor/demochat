@@ -4,7 +4,13 @@ Demochat::Application.routes.draw do
   root 'home#index'
 
   resources :messages, :only => [:index,:create]
+
+
   get '/messages/fetch' => 'messages#fetch'
+
+  resources :rooms, :only => [:index,:create,:show]
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

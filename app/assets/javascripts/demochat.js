@@ -2,6 +2,7 @@ $(document).ready(function () {
 
   //find the input box on the page
   var $msgInput = $('#msg-input');
+  var $msgRoom = $('#msg-room');
 
   //fetch the ul element on the page to append messages to
   demoChat.$messagesList = $('ul#messages');
@@ -20,10 +21,11 @@ $(document).ready(function () {
     event.preventDefault();
     // grab text from the input box
     var msgText = $msgInput.val();
+    var msgRoom = $msgRoom.val();
     //clear the input box
     $msgInput.val('');
     //call the create message function
-    demoChat.createMessage(msgText);
+    demoChat.createMessage(msgText, msgRoom);
   });
 });
 
@@ -77,7 +79,7 @@ var demoChat = {
     },
 
     //ajax request to create a new message
-    createMessage: function(msgText) {
+    createMessage: function(msgText, msgRoom) {
       //to refer to parent object
       var self = this;
       //send ajax request to post message content
@@ -85,7 +87,7 @@ var demoChat = {
         url: '/messages',
         method: 'POST',
         dataType: 'json',
-        data: {message: {text: msgText}}
+        data: {message: {text: msgText, room_id: msgRoom }}
       }).done(function(response){
         // update the page with all new messages
         self.getMessages();

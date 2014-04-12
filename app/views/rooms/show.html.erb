@@ -1,0 +1,17 @@
+<h1>Welcome to this room</h1>
+
+<h2>All Messages</h2>
+
+<ul id="messages">
+</ul>
+
+<% if user_signed_in? %>
+
+  <form id="msg-form">
+    <input type="hidden" value="<%= @room_id %>"  id="msg-room">
+    <input type="text" name="text" id="msg-input">
+  </form>
+
+<% else %>
+  <p>You must sign in to send messages</p>
+<% end %>
