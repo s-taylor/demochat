@@ -1,32 +1,31 @@
 $(document).ready(function () {
 
-  //find the input box on the page
+  //find the input box on the page (for new message text)
   var $msgInput = $('#msg-input');
-  var $msgRoom = $('#msg-room');
+  //grab the room id from the hidden form input
+  var roomID = $('#msg-room').val();
 
   //fetch the ul element on the page to append messages to
   demoChat.$messagesList = $('ul#messages');
 
-  // when the page loads, get the messages
+  //when the page loads, get the messages
   demoChat.getMessages();
 
-  // setup our timer to check for new messages automatically
+  //setup our timer to check for new messages automatically
   demoChat.messageTimer = setInterval(function () {
     demoChat.getMessages();
   },3000);
 
   //add event handler to monitor the input box
   $('#msg-form').on('submit', function (event) {
-    // prevent default form submit
+    //prevent default form submit
     event.preventDefault();
-    // grab text from the input box
+    //grab text from the input box
     var msgText = $msgInput.val();
-    // grab the room id from our form
-    var msgRoom = $msgRoom.val();
     //clear the input box
     $msgInput.val('');
     //call the create message function
-    demoChat.createMessage(msgText, msgRoom);
+    demoChat.createMessage(msgText, roomID);
   });
 });
 
@@ -79,8 +78,16 @@ var demoChat = {
       });
     },
 
+    //takes a single message object and adds it to the page
+    addMessage: function (message) {
+      //reformat the date using moment.js
+      var date = moment(message.created_at).calendar();
+      //append a message to the messages.ul
+      this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
+    },
+
     //ajax request to create a new message
-    createMessage: function(msgText, msgRoom) {
+    createMessage: function(msgText, roomID) {
       //to refer to parent object
       var self = this;
       //send ajax request to post message content
@@ -88,29 +95,22 @@ var demoChat = {
         url: '/messages',
         method: 'POST',
         dataType: 'json',
-        data: {message: {text: msgText, room_id: msgRoom }}
-      }).done(function(response){
+        data: {
+          message: {
+            text: msgText, 
+            room_id: roomID 
+          }
+        }
+      }).done(function(){
         // update the page with all new messages
         self.getMessages();
       });
     },
 
-    //takes a single message object and adds it to the page
-    addMessage: function (message) {
-      //reformat the date
-      var date = moment(message.created_at).calendar();
-      //append all messages to the ul
-      this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
-    },
-
-    //delete all messages displayed on the page
-    deleteMessages: function() {
+    //FOR TESTING ONLY! Deletes all messages and re-feches
+    reset: function() {
       this.$messagesList.empty();
-    },
-
-    // pageUpdate: function () {
-    //   console.log('checking for messages');
-    //   this.deleteMessages();
-    //   this.getMessages();
-    // }
+      this.lastMsgID = 0;
+      this.getMessages();
+    }
 };

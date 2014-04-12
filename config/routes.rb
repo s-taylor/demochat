@@ -3,12 +3,13 @@ Demochat::Application.routes.draw do
 
   root 'home#index'
 
+  resources :rooms, :only => [:index,:create,:show]
+
   resources :messages, :only => [:index,:create]
 
-
+  #route for AJAX only to fetch new messages, MUST pass id of last message fetched
   get '/messages/fetch' => 'messages#fetch'
-
-  resources :rooms, :only => [:index,:create,:show]
+  
 
 
   # The priority is based upon order of creation: first created -> highest priority.
