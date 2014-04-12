@@ -13,19 +13,14 @@ $(document).ready(function () {
     var msgText = $msgInput.val();
     //clear the input box
     $msgInput.val('');
-
-    //send ajax request to post message content
-    $.ajax({
-      url: '/messages',
-      method: 'POST',
-      dataType: 'json',
-      data: {message: {text: msgText}}
-    }).done(function(response){
-      //add this message to the page
-      demoChat.addMessage(response);
-    });
+    //call the create message function
+    demoChat.createMessage(msgText);
   });
 });
+
+//------------------------------------------------------
+// 
+//------------------------------------------------------
 
 var demoChat = {
     //to store our messages list ul
@@ -65,5 +60,19 @@ var demoChat = {
       var date = moment(message.created_at).calendar();
       //append all messages to the ul
       this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
+    },
+
+    //ajax request to create a new message
+    createMessage: function(msgText) {
+      //send ajax request to post message content
+      $.ajax({
+        url: '/messages',
+        method: 'POST',
+        dataType: 'json',
+        data: {message: {text: msgText}}
+      }).done(function(response){
+        //add this message to the page
+        demoChat.addMessage(response);
+      });
     }
 };
