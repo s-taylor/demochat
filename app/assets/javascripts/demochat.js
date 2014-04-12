@@ -42,6 +42,7 @@ var demoChat = {
         type: 'GET', 
         dataType: 'json'
       }).done(function(response){
+        console.log(response);
         // add the message to the page
         self.displayMessages(response);
       });
@@ -63,6 +64,6 @@ var demoChat = {
       //reformat the date
       var date = moment(message.created_at).calendar();
       //append all messages to the ul
-      this.$messagesList.append(['<li>',date,': ',message.text,'</li>'].join(''));
+      this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
     }
 };
