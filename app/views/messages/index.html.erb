@@ -3,6 +3,10 @@
 <ul id="messages">
 </ul>
 
+<% if user_signed_in? %>
 <form id="msg-form">
   <input type="text" name="text" id="msg-input">
 </form>
+<% else %>
+  <p>You must sign in to send messages</p>
+<% end %>

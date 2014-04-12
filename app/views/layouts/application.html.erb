@@ -8,6 +8,14 @@
 </head>
 <body>
 
+  <% if user_signed_in? %>
+    <p>User signed in: <%= current_user.username %></p>
+    <p><%= link_to 'Sign Out', destroy_user_session_path, :method => 'delete' %></p>
+  <% else %>
+    <p><b>Test User details:</b> email = user1@user.com, password = abcd1234</p>
+    <%= link_to 'login', new_user_session_path %><br>
+  <% end %>
+
 <%= yield %>
 
 </body>
