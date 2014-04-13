@@ -68,3 +68,6 @@ gem 'annotate'
 
 #to allow better timestamp formatting
 gem 'momentjs-rails'
+
+#supports user logins and image uploads
+gem 'rails_12factor'

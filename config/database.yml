@@ -1,0 +1,25 @@
+# PostgreSQL. Versions 8.2 and up are supported.
+
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: demochat_development
+  pool: 5
+  username: markpereira
+  password:
+
+# test:
+#  adapter: postgresql
+#  encoding: unicode
+#  database: demochat_test
+#  pool: 5
+#  username: demochat
+#  password:
+
+production:
+ adapter: postgresql
+ encoding: unicode
+ database: demochat_production
+ pool: 5
+ username: demochat
+ password:
