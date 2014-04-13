@@ -3,7 +3,6 @@ $(document).ready(function () {
   //find the input box on the page (for new message text)
   var $msgInput = $('#msg-input');
   //grab the room id from the hidden form input
-  // var roomID = $('#msg-room').val();
 
   //fetch the ul element on the page to append messages to
   demoChat.$messagesList = $('ul#messages');

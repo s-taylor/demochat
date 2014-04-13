@@ -7,11 +7,19 @@ class RoomsController < ApplicationController
     end
 
     def create
-        # binding.pry
-        room = Room.new(params[:room])
-        room.save
+        input = params[:room].values.first
+        binding.pry
+        checker = Room.where(:name => input).first.name
 
-        redirect_to root_path
+        binding.pry
+        if input == checker
+            binding.pry
+        else
+            room = Room.new(params[:room])
+            room.save
+
+            redirect_to root_path
+        end
     end
 
     def show
