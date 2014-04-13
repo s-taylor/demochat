@@ -1,7 +1,7 @@
 Demochat::Application.routes.draw do
   devise_for :users
 
-  root 'home#index'
+  root 'home#index', :as => :home
 
   resources :rooms, :only => [:index,:create,:show]
 

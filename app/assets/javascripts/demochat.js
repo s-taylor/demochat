@@ -1,31 +1,43 @@
-$(document).ready(function () {
+//this code will run on every new page including following links
+$(document).on('ready page:load', function () {
 
-  //find the input box on the page (for new message text)
-  var $msgInput = $('#msg-input');
-  //grab the room id from the hidden form input
+  console.log('Running Document Ready Code');
+
+  //stop any active message fetch timers
+  demoChat.stopMessageFetch();
+
+  //--------------------------------------------
+  // CODE FOR ROOMS
+  //--------------------------------------------
 
   //fetch the ul element on the page to append messages to
   demoChat.$messagesList = $('ul#messages');
 
-  //when the page loads, get the messages
-  demoChat.getMessages();
+  //only run this code if the current page is a room
+  if ($('ul#messages').length > 0) {
+    //find the input box on the page (for new message text)
+    var $msgInput = $('#msg-input');
 
-  //setup our timer to check for new messages automatically
-  demoChat.messageTimer = setInterval(function () {
+    //when the page loads, get the messages
     demoChat.getMessages();
-  },3000);
 
-  //add event handler to monitor the input box
-  $('#msg-form').on('submit', function (event) {
-    //prevent default form submit
-    event.preventDefault();
-    //grab text from the input box
-    var msgText = $msgInput.val();
-    //clear the input box
-    $msgInput.val('');
-    //call the create message function
-    demoChat.createMessage(msgText);
-  });
+    //setup our timer to check for new messages automatically
+    demoChat.messageTimer = setInterval(function () {
+      demoChat.getMessages();
+    },3000);
+
+    //add event handler to monitor the input box
+    $('#msg-form').on('submit', function (event) {
+      //prevent default form submit
+      event.preventDefault();
+      //grab text from the input box
+      var msgText = $msgInput.val();
+      //clear the input box
+      $msgInput.val('');
+      //call the create message function
+      demoChat.createMessage(msgText);
+    });
+  }
 });
 
 //------------------------------------------------------
@@ -42,7 +54,7 @@ var demoChat = {
     //store the id of the last message received from the server
     lastMsgID: 0,
 
-    //store the roomID 
+    //store the roomID for the current room (this is set by the .html file script tag)
     roomID: undefined,
 
     //fetch the messages from the server
@@ -107,6 +119,10 @@ var demoChat = {
         // update the page with all new messages
         self.getMessages();
       });
+    },
+
+    stopMessageFetch: function() {
+      clearInterval(this.messageTimer);
     },
 
     //FOR TESTING ONLY! Deletes all messages and re-feches
