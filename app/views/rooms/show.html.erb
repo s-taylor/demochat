@@ -8,10 +8,11 @@
 <% if user_signed_in? %>
 
   <form id="msg-form">
-    <input type="hidden" value="<%= @room_id %>"  id="msg-room">
     <input type="text" name="text" id="msg-input">
   </form>
 
 <% else %>
   <p>You must sign in to send messages</p>
 <% end %>
+
+<script> window.demoChat.roomID = <%= @room_id %> </script>

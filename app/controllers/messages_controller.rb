@@ -20,9 +20,12 @@ class MessagesController < ApplicationController
   #to handle json requests for message data
   def fetch
 
-    lastMsgID = params["lastMsgID"]
+    # binding.pry
 
-    @messages = Message.where("id > #{lastMsgID}")
+    lastMsgID = params["lastMsgID"]
+    roomID = params["roomID"]
+
+    @messages = Message.where("id > ? AND room_id = ?", lastMsgID, roomID)
 
     response = {}
     @messages.each_with_index do |message,index|

@@ -3,7 +3,7 @@ $(document).ready(function () {
   //find the input box on the page (for new message text)
   var $msgInput = $('#msg-input');
   //grab the room id from the hidden form input
-  var roomID = $('#msg-room').val();
+  // var roomID = $('#msg-room').val();
 
   //fetch the ul element on the page to append messages to
   demoChat.$messagesList = $('ul#messages');
@@ -25,7 +25,7 @@ $(document).ready(function () {
     //clear the input box
     $msgInput.val('');
     //call the create message function
-    demoChat.createMessage(msgText, roomID);
+    demoChat.createMessage(msgText);
   });
 });
 
@@ -43,6 +43,9 @@ var demoChat = {
     //store the id of the last message received from the server
     lastMsgID: 0,
 
+    //store the roomID 
+    roomID: undefined,
+
     //fetch the messages from the server
     getMessages: function(){
       //to refer to parent object
@@ -56,7 +59,7 @@ var demoChat = {
         url: '/messages/fetch', 
         type: 'GET', 
         dataType: 'json',
-        data: {lastMsgID: this.lastMsgID}
+        data: {lastMsgID: self.lastMsgID, roomID: self.roomID}
       }).done(function(response){
         //log the response to console
         console.log(response);
@@ -87,7 +90,7 @@ var demoChat = {
     },
 
     //ajax request to create a new message
-    createMessage: function(msgText, roomID) {
+    createMessage: function(msgText) {
       //to refer to parent object
       var self = this;
       //send ajax request to post message content
@@ -98,7 +101,7 @@ var demoChat = {
         data: {
           message: {
             text: msgText, 
-            room_id: roomID 
+            room_id: self.roomID 
           }
         }
       }).done(function(){
