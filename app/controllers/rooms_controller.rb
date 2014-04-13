@@ -8,9 +8,8 @@ class RoomsController < ApplicationController
 
     def create
         input = params[:room]["name"]
+        #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
         room = Room.where(:name => input).first
-
-        binding.pry
 
         if room != nil
             redirect_to room_path(room.id)

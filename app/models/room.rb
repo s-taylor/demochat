@@ -10,8 +10,8 @@
 #
 
 class Room < ActiveRecord::Base
-    attr_accessible :name, :description
+  attr_accessible :name, :description
 
-    has_many :messages
-    has_and_belongs_to_many :users
+  has_many :messages
+  has_and_belongs_to_many :users
 end

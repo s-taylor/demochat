@@ -5,7 +5,7 @@ Demochat::Application.routes.draw do
 
   resources :rooms, :only => [:index,:create,:show]
 
-  resources :messages, :only => [:index,:create]
+  resources :messages, :only => [:create]
 
   #route for AJAX only to fetch new messages, MUST pass id of last message fetched
   get '/messages/fetch' => 'messages#fetch'
