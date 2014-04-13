@@ -5,6 +5,7 @@ $(document).on('ready page:load', function () {
 
   //stop any active message fetch timers
   demoChat.stopMessageFetch();
+  demoChat.lastMsgID = 0;
 
   //--------------------------------------------
   // CODE FOR ROOMS
