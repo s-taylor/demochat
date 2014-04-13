@@ -24,7 +24,7 @@ class RoomsController < ApplicationController
     end
 
     def show
-        @room_id = params[:id]
+        @room = Room.find(params[:id])
     end
 
 end

@@ -3,9 +3,8 @@ $(document).on('ready page:load', function () {
 
   console.log('Running Document Ready Code');
 
-  //stop any active message fetch timers
-  demoChat.stopMessageFetch();
-  demoChat.lastMsgID = 0;
+  //setup js for a new page
+  demoChat.newPage();
 
   //--------------------------------------------
   // CODE FOR ROOMS
@@ -122,8 +121,9 @@ var demoChat = {
       });
     },
 
-    stopMessageFetch: function() {
+    newPage: function() {
       clearInterval(this.messageTimer);
+      demoChat.lastMsgID = 0;
     },
 
     //FOR TESTING ONLY! Deletes all messages and re-feches

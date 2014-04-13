@@ -8,17 +8,25 @@
 </head>
 <body>
   
-  <%= link_to 'Home', home_path %>
+<div id="container">
+  <ul class="links clearfix">
+    <li><%= link_to 'Home', home_path %></li>
 
-  <% if user_signed_in? %>
-    <p>User signed in: <%= current_user.username %></p>
-    <p><%= link_to 'Sign Out', destroy_user_session_path, :method => 'delete' %></p>
-  <% else %>
-    <p><b>Test User details:</b> email = user1@user.com, password = abcd1234</p>
-    <%= link_to 'login', new_user_session_path %><br>
-  <% end %>
+    <div id="user">
+      <% if user_signed_in? %>
+        <p>User signed in: <%= current_user.username %></p>
+        <li><%= link_to 'Sign Out', destroy_user_session_path, :method => 'delete' %></li>
+      <% else %>
+        <li><%= link_to 'Login', new_user_session_path %></li><br>
+      <% end %>
+    </div>
+  </ul>
+  <p><b>Test User details:</b> email = user1@user.com, password = abcd1234</p>
 
-<%= yield %>
+  <hr>
+
+  <%= yield %>
+</div>
 
 </body>
 </html>

@@ -1,6 +1,4 @@
-<h1>Welcome to this room</h1>
-
-<h2>All Messages</h2>
+<h2><%= @room.name %></h2>
 
 <ul id="messages">
 </ul>
@@ -15,4 +13,4 @@
   <p>You must sign in to send messages</p>
 <% end %>
 
-<script> window.demoChat.roomID = <%= @room_id %> </script>
+<script> window.demoChat.roomID = <%= @room.id %> </script>

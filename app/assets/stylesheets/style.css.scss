@@ -1,0 +1,40 @@
+#container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+ul.links {
+  background-color: black;
+  color: white;
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 10px;
+    display: inline-block;
+    color: white;
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+
+  div#user {
+    float: right;
+
+    p {
+      margin: 0;
+      padding: 10px;
+      display: inline-block;
+    }
+  }
+}
+
+
+// clearfix hack
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
