@@ -31,3 +31,10 @@ message.save
 message2 = room.messages.new(:text => "second message in Simon's room?")
 message2.user_id = user.id
 message2.save
+
+
+# vote's seed file
+vote = room.votes.new(:category => "kick", :room_id => room.id)
+vote.save
+vote2 = room2.votes.new(:category => "kick", :room_id => room.id)
+vote2.save

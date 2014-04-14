@@ -1,4 +1,5 @@
 Demochat::Application.routes.draw do
+  
   devise_for :users
 
   root 'home#index', :as => :home
@@ -6,6 +7,10 @@ Demochat::Application.routes.draw do
   resources :rooms, :only => [:index,:create,:show]
 
   resources :messages, :only => [:create]
+
+  resources :votes, :only => [:index,:create,:show,:destroy]
+
+  resources :responses, :only => [:index,:create,:show,:destroy]
 
   #route for AJAX only to fetch new messages, MUST pass id of last message fetched
   get '/messages/fetch' => 'messages#fetch'

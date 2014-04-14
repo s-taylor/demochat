@@ -7,6 +7,21 @@ class MessagesController < ApplicationController
 
     message = current_user.messages.new(params[:message])
 
+    # If we see a message that looks like a vote, create a new Vote object for it.
+    # We can redo vote detection once we visit Regular Expressions.
+    if (/vote/.match message.text)
+      parts = message.text.split(',') # vote,kick,nix
+      command = parts[0] # vote
+      category = parts[1] # kick
+      target = User.where(:username => parts[2]) # find the user by username
+
+      target.present? && Vote.create(
+        :category => category,
+        :target => target.id,
+        :room_id => 1 # fix me
+      )
+    end
+
     if message.save
       render :json => message.to_json
     else

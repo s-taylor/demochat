@@ -14,6 +14,7 @@ class Room < ActiveRecord::Base
 
   has_many :messages
   has_and_belongs_to_many :users
+  has_many :votes
 
   validates :name, length: { minimum: 5 }
 end
