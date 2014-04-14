@@ -249,7 +249,7 @@ var demoChat = {
 //------------------------------------------------------
 var helper = {
   //setup logging of messages
-  logging: false,
+  logging: true,
 
   //log a message to console IF logging true (must pass an array!)
   log: function(text) {

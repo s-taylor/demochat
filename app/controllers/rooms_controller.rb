@@ -46,7 +46,6 @@ class RoomsController < ApplicationController
 
     #find all of the users for this room (returning username ONLY)
     response["users"] = Room.find(roomID).users.pluck(:username)
->>>>>>> major_refactor
 
     #send response to client
     respond_to do |format|
