@@ -7,6 +7,17 @@
     <%= f.text_field :name %>
 <% end %>
 
+<% if @room.errors.any? %>
+  <div>
+    <p><b>Error:</b> Your Room could not be saved:</p>
+    <ul>
+      <% @room.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <h1>Top 10 Chat Rooms</h1>
 
 <ul id="rooms_container">

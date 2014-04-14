@@ -14,12 +14,15 @@ class RoomsController < ApplicationController
         if room != nil
             redirect_to room_path(room.id)
         else
-            room = Room.new(params[:room])
-            room.save
-
-            redirect_to room_path(room.id)
+            @room = Room.new(params[:room])
+            @room.save
+            if @room.save
+              redirect_to @room
+            else
+              @rooms = Room.all
+              render :template => "home/index"  
+            end
         end
-
     end
 
     def show

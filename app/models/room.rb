@@ -15,5 +15,9 @@ class Room < ActiveRecord::Base
   has_many :messages
   has_and_belongs_to_many :users
 
-  validates :name, length: { minimum: 5 }
+ # Room validation - doesn't allow a space at the start or end when creating a room, 
+ # 	and min and max character set to 5 min and 32 max.
+  validates :name, length: { minimum: 5, maximum: 32 }, :uniqueness => true,
+  format: { with: /\A\b[a-zA-Z0-9]+\b\Z/, message: "only allows alphanumeric characters without spaces" } 
+
 end
