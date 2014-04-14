@@ -57,13 +57,25 @@ var demoChat = {
     //store the roomID for the current room (this is set by the .html file script tag)
     roomID: undefined,
 
+    //to store the current state of fetching requests (true = currently fetching messages)
+    requestInProgress: false,
+
     //fetch the messages from the server
     getMessages: function(){
       //to refer to parent object
       var self = this;
 
+      //if a request is already in progress, exit this method (don't run the remaining code)
+      if (self.requestInProgress) {
+        console.log("Requesting Messages: Request in progress, aborting");
+        return;
+      }
+
+      //set request in progress flag to true
+      self.requestInProgress = true;
+
       //TESTING ONLY
-      console.log(["Requesting Messages with id > ",this.lastMsgID].join(''));
+      console.log(["Requesting Messages: Fetch Messages with id > ",this.lastMsgID].join(''));
 
       //submit ajax request to fetch all messages
       $.ajax({
@@ -76,6 +88,9 @@ var demoChat = {
         console.log(response);
         // add the new messages to the page
         self.displayMessages(response);
+      }).always(function() {
+        //ajax request completed, set requeset in progress to false
+        self.requestInProgress = false;
       });
     },
 
