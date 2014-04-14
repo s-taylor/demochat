@@ -1,7 +1,7 @@
 //this code will run on every new page including following links
 $(document).on('ready page:load', function () {
 
-  console.log('Running Document Ready Code');
+  console.log('New Page Loaded, running Javascript');
 
   //setup js for a new page
   demoChat.newPage();
@@ -10,11 +10,15 @@ $(document).on('ready page:load', function () {
   // CODE FOR ROOMS
   //--------------------------------------------
 
-  //fetch the ul element on the page to append messages to
-  demoChat.$messagesList = $('ul#messages');
+  //set the room id
+  demoChat.roomID = demoChat.getRoomID();
 
   //only run this code if the current page is a room
-  if ($('ul#messages').length > 0) {
+  if (demoChat.roomID !== -1) {
+    
+    //fetch the ul element on the page to append messages to
+    demoChat.$messagesList = $('ul#messages');
+
     //find the input box on the page (for new message text)
     var $msgInput = $('#msg-input');
 
@@ -82,7 +86,10 @@ var demoChat = {
         url: '/messages/fetch', 
         type: 'GET', 
         dataType: 'json',
-        data: {lastMsgID: self.lastMsgID, roomID: self.roomID}
+        data: {
+          lastMsgID: self.lastMsgID, 
+          roomID: self.roomID
+        }
       }).done(function(response){
         //log the response to console
         console.log(response);
@@ -136,9 +143,22 @@ var demoChat = {
       });
     },
 
+    //code to run each time a new page is visited
     newPage: function() {
+      //stop any active timers
       clearInterval(this.messageTimer);
+      //reset the last message id to zero so all messages can be refetched
       demoChat.lastMsgID = 0;
+    },
+
+    //fetch the current room id
+    getRoomID: function() {
+      var path = helpers.getPath();
+      if(path[0] === 'rooms') {
+        return path[1];
+      } else {
+        return -1;
+      }
     },
 
     //FOR TESTING ONLY! Deletes all messages and re-feches
@@ -147,4 +167,20 @@ var demoChat = {
       this.lastMsgID = 0;
       this.getMessages();
     }
+
+};
+
+//------------------------------------------------------
+// HELPER FUNCTIONS (GENERIC PURPOSE)
+//------------------------------------------------------
+var helpers = {
+  //returns the current path as an array split by "/"
+  getPath: function() {
+    //fetch the full path
+    var fullPath = window.location.pathname;
+    //ignore the first "/"
+    fullPathTrim = fullPath.substr(1,fullPath.length);
+    //return an array containing each component of the path
+    return fullPathTrim.split("/");
+  }
 };

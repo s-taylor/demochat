@@ -17,8 +17,6 @@ class MessagesController < ApplicationController
   #to handle json requests for message data
   def fetch
 
-    # binding.pry
-
     lastMsgID = params["lastMsgID"]
     roomID = params["roomID"]
 

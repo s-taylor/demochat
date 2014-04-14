@@ -9,8 +9,6 @@ Demochat::Application.routes.draw do
 
   #route for AJAX only to fetch new messages, MUST pass id of last message fetched
   get '/messages/fetch' => 'messages#fetch'
-  
-
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
