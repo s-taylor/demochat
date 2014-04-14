@@ -1,7 +1,7 @@
-//this code will run on every new page including following links
-$(document).on('ready page:load', function () {
+//run this code when the site is loaded
+$(document).ready(function () {
 
-  console.log('New Page Loaded, running Javascript');
+  helper.log('Page: New Page Loaded');
 
   //setup js for a new page
   demoChat.newPage();
@@ -23,11 +23,11 @@ $(document).on('ready page:load', function () {
     var $msgInput = $('#msg-input');
 
     //when the page loads, get the messages
-    demoChat.getMessages();
+    demoChat.fetchData();
 
     //setup our timer to check for new messages automatically
     demoChat.messageTimer = setInterval(function () {
-      demoChat.getMessages();
+      demoChat.fetchData();
     },3000);
 
     //add event handler to monitor the input box
@@ -55,23 +55,30 @@ var demoChat = {
     //timer to periodically check for new messages
     messageTimer: undefined,
 
+    //timer to inform the server that user is active
+    activityTimer: undefined,
+
     //store the id of the last message received from the server
     lastMsgID: 0,
 
-    //store the roomID for the current room (this is set by the .html file script tag)
-    roomID: undefined,
+    //store the roomID for the current room
+    roomID: -1,
 
     //to store the current state of fetching requests (true = currently fetching messages)
     requestInProgress: false,
 
+    //--------------------------------------------------------
+    // FETCH MESSAGES AND USERS FOR THE ROOM AND UPDATES PAGE
+    //--------------------------------------------------------
+
     //fetch the messages from the server
-    getMessages: function(){
+    fetchData: function(){
       //to refer to parent object
       var self = this;
 
       //if a request is already in progress, exit this method (don't run the remaining code)
       if (self.requestInProgress) {
-        console.log("Requesting Messages: Request in progress, aborting");
+        helper.log("Messages: Fetch aborted, request already in progress");
         return;
       }
 
@@ -79,7 +86,7 @@ var demoChat = {
       self.requestInProgress = true;
 
       //TESTING ONLY
-      console.log(["Requesting Messages: Fetch Messages with id > ",this.lastMsgID].join(''));
+      helper.logArray(["Messages: Fetch Messages with id > ",this.lastMsgID]);
 
       //submit ajax request to fetch all messages
       $.ajax({
@@ -92,13 +99,20 @@ var demoChat = {
         }
       }).done(function(response){
         //log the response to console
-        console.log(response);
+        helper.log(response);
         // add the new messages to the page
-        self.displayMessages(response);
+        self.displayMessages(response.messages);
+        // add the users to the page
+        self.displayUsers(response.users);
+
       }).always(function() {
         //ajax request completed, set requeset in progress to false
         self.requestInProgress = false;
       });
+    },
+
+    displayUsers: function(users) {
+      
     },
 
     //update the page to display the messages
@@ -122,6 +136,10 @@ var demoChat = {
       this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
     },
 
+    //------------------------------------------------------
+    // CREATE NEW MESSAGE
+    //------------------------------------------------------
+
     //ajax request to create a new message
     createMessage: function(msgText) {
       //to refer to parent object
@@ -139,13 +157,39 @@ var demoChat = {
         }
       }).done(function(){
         // update the page with all new messages
-        self.getMessages();
+        self.fetchData();
       });
     },
 
+    //------------------------------------------------------
+    // SEND USER ACTIVE
+    //------------------------------------------------------
+
+    //ajax request to create a new message
+    userActive: function() {
+      //to refer to parent object
+      var self = this;
+      //log a message
+      helper.logArray(["User Activity: I'm still here! I'm in Room ",self.roomID]);
+      //send ajax request to post message content
+      $.ajax({
+        url: '/activity/user_active',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          //tell the server which room you are in
+          room_id: self.roomID
+        }
+      });
+    },
+
+    //------------------------------------------------------
+    // OTHER CODE
+    //------------------------------------------------------
+
     //code to run each time a new page is visited
     newPage: function() {
-      //stop any active timers
+      //stop any active message fetch timers
       clearInterval(this.messageTimer);
       //reset the last message id to zero so all messages can be refetched
       demoChat.lastMsgID = 0;
@@ -153,7 +197,7 @@ var demoChat = {
 
     //fetch the current room id
     getRoomID: function() {
-      var path = helpers.getPath();
+      var path = helper.getPath();
       if(path[0] === 'rooms') {
         return path[1];
       } else {
@@ -162,10 +206,10 @@ var demoChat = {
     },
 
     //FOR TESTING ONLY! Deletes all messages and re-feches
-    reset: function() {
+    reFetchMessages: function() {
       this.$messagesList.empty();
       this.lastMsgID = 0;
-      this.getMessages();
+      this.fetchData();
     }
 
 };
@@ -173,7 +217,23 @@ var demoChat = {
 //------------------------------------------------------
 // HELPER FUNCTIONS (GENERIC PURPOSE)
 //------------------------------------------------------
-var helpers = {
+var helper = {
+  //setup logging of messages
+  logging: true,
+
+  //log a message to console IF logging true (must pass an array!)
+  log: function(text) {
+    if (this.logging === true) {
+      console.log(text);  
+    }
+  },
+
+  logArray: function(textArray) {
+    if (this.logging === true) {
+      console.log(textArray.join(''));  
+    }
+  },
+
   //returns the current path as an array split by "/"
   getPath: function() {
     //fetch the full path

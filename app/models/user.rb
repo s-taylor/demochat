@@ -17,6 +17,7 @@
 #  updated_at             :datetime
 #  username               :string(255)
 #  image                  :text
+#  last_active            :datetime
 #
 
 class User < ActiveRecord::Base
@@ -25,8 +26,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-    attr_accessible :email, :username, :password, :password_confirmation
+  attr_accessible :email, :username, :password, :password_confirmation
 
-    has_many :messages
-    has_and_belongs_to_many :rooms
+  has_many :messages
+  has_and_belongs_to_many :rooms
 end

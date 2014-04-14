@@ -17,6 +17,7 @@
 #  updated_at             :datetime
 #  username               :string(255)
 #  image                  :text
+#  last_active            :datetime
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
