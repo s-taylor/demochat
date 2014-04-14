@@ -32,12 +32,10 @@
 <!-- if the user is signed in, start sending user activity messages -->
 <% if user_signed_in? %>
   <script>
-    //send a single user active message
-    demoChat.userActive();
-    //start user activity timer (runs every 60 seconds)
-    demoChat.activityTimer = setInterval(function () {
-      demoChat.userActive();
-    },60000);
+    //start user activity timer
+    $(document).ready(function () {
+      demoChat.startUserActiveTimer();
+    });
   </script>
 <% end %>
 

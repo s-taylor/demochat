@@ -1,29 +1,53 @@
 class RoomsController < ApplicationController
 
-    def index
-        @rooms = Room.all
+  def index
+    @rooms = Room.all
 
-        @room = Room.new
+    @room = Room.new
+  end
+
+  def create
+    input = params[:room]["name"]
+    #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
+    room = Room.where(:name => input).first
+
+    if room != nil
+        redirect_to room_path(room.id)
+    else
+        room = Room.new(params[:room])
+        room.save
+
+        redirect_to room_path(room.id)
     end
 
-    def create
-        input = params[:room]["name"]
-        #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
-        room = Room.where(:name => input).first
+  end
 
-        if room != nil
-            redirect_to room_path(room.id)
-        else
-            room = Room.new(params[:room])
-            room.save
+  def show
+    @room = Room.find(params[:id])
+  end
 
-            redirect_to room_path(room.id)
-        end
+  #to handle json requests for messages and users for the current room
+  def fetch
 
+    lastMsgID = params[:lastMsgID]
+    roomID = params[:id]
+
+    #setup a response hash
+    response = {}
+
+    #find the messages required
+    @messages = Message.where("id > ? AND room_id = ?", lastMsgID, roomID)
+
+    #reformat all messages 
+    response["messages"] = @messages.map { |message| message.json_format }
+
+    #find all of the users for this room (returning username ONLY)
+    response["users"] = Room.find(roomID).users.pluck(:username)
+
+    #send response to client
+    respond_to do |format|
+      format.json {render :json => response}
     end
-
-    def show
-        @room = Room.find(params[:id])
-    end
+  end
 
 end
