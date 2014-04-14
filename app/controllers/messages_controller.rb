@@ -14,27 +14,4 @@ class MessagesController < ApplicationController
     end
   end
 
-  #to handle json requests for message data
-  def fetch
-
-    lastMsgID = params["lastMsgID"]
-    roomID = params["roomID"]
-
-    @messages = Message.where("id > ? AND room_id = ?", lastMsgID, roomID)
-
-    response = {}
-    @messages.each_with_index do |message,index|
-      msg_hash = {}
-      msg_hash["id"] = message.id
-      msg_hash["text"] = message.text
-      msg_hash["date"] = message.created_at
-      msg_hash["username"] = message.user.username
-      response["message-#{index + 1}"] = msg_hash
-    end
-
-    respond_to do |format|
-      format.json {render :json => response}
-    end
-  end
-
 end

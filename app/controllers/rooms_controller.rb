@@ -1,32 +1,57 @@
 class RoomsController < ApplicationController
 
-    def index
+  def index
+    @rooms = Room.all
+
+    @room = Room.new
+  end
+
+  def create
+    input = params[:room]["name"]
+    #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
+    room = Room.where(:name => input).first
+
+    if room != nil
+      redirect_to room_path(room.id)
+    else
+      @room = Room.new(params[:room])
+      @room.save
+      if @room.save
+        redirect_to @room
+      else
         @rooms = Room.all
+        render :template => "home/index"  
+      end
+    end#end of if
+  end#end of create
 
-        @room = Room.new
+  def show
+    @room = Room.find(params[:id])
+  end
+
+  #to handle json requests for messages and users for the current room
+  def fetch
+
+    lastMsgID = params[:lastMsgID]
+    roomID = params[:id]
+
+    #setup a response hash
+    response = {}
+
+    #find the messages required
+    @messages = Message.where("id > ? AND room_id = ?", lastMsgID, roomID)
+
+    #reformat all messages 
+    response["messages"] = @messages.map { |message| message.json_format }
+
+    #find all of the users for this room (returning username ONLY)
+    response["users"] = Room.find(roomID).users.pluck(:username)
+>>>>>>> major_refactor
+
+    #send response to client
+    respond_to do |format|
+      format.json {render :json => response}
     end
-
-    def create
-        input = params[:room]["name"]
-        #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
-        room = Room.where(:name => input).first
-
-        if room != nil
-            redirect_to room_path(room.id)
-        else
-            @room = Room.new(params[:room])
-            @room.save
-            if @room.save
-              redirect_to @room
-            else
-              @rooms = Room.all
-              render :template => "home/index"  
-            end
-        end
-    end
-
-    def show
-        @room = Room.find(params[:id])
-    end
+  end
 
 end

@@ -17,6 +17,7 @@
 #  updated_at             :datetime
 #  username               :string(255)
 #  image                  :text
+#  last_active            :datetime
 #
 
 class User < ActiveRecord::Base
@@ -25,18 +26,16 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-    attr_accessible :email, :username, :password, :password_confirmation
+  attr_accessible :email, :username, :password, :password_confirmation
 
-    has_many :messages
-    has_and_belongs_to_many :rooms
+  has_many :messages
+  has_and_belongs_to_many :rooms
 
-#validation for username
+  #validation for username
   #username must be populated, a minimum of 5 characters, maximum of 16 characters and is unique
-  	validates :username, :presence => true, length: { minimum: 6, maximum: 20 }, :uniqueness => { case_sensitive: false },
-  	format: { with: /\A[a-zA-Z0-9]+\Z/, message: "only allows alphanumeric characters" } 
+	validates :username, :presence => true, length: { minimum: 6, maximum: 20 }, :uniqueness => { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9]+\Z/, message: "only allows alphanumeric characters" } 
  
-#validation for email at login  
-  	#validates :email, :uniqueness => true, :length => { :minimum => 2 }
-  	validates :email, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
+  #validation for email at login  
+	validates :email, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
   	  		
 end	

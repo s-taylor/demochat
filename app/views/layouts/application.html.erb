@@ -26,7 +26,18 @@
   <hr>
 
   <%= yield %>
+
 </div>
+
+<!-- if the user is signed in, start sending user activity messages -->
+<% if user_signed_in? %>
+  <script>
+    //start user activity timer
+    $(document).ready(function () {
+      demoChat.startUserActiveTimer();
+    });
+  </script>
+<% end %>
 
 </body>
 </html>
