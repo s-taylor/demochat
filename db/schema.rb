@@ -24,6 +24,14 @@ ActiveRecord::Schema.define(version: 20140414030657) do
     t.datetime "updated_at"
   end
 
+  create_table "responses", force: true do |t|
+    t.integer  "vote_id"
+    t.integer  "user_id"
+    t.boolean  "choice"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "rooms", force: true do |t|
     t.string   "name"
     t.text     "description"
@@ -57,5 +65,13 @@ ActiveRecord::Schema.define(version: 20140414030657) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "votes", force: true do |t|
+    t.string   "category"
+    t.integer  "target"
+    t.integer  "room_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
