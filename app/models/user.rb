@@ -38,5 +38,20 @@ class User < ActiveRecord::Base
  
   #validation for email at login  
 	validates :email, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
+
+  def self.check_inactive
+    #find inactive users (users who have not pinged the server within the last 60 seconds)
+    inactive_users = self.where('last_active < ?',(Time.now - 60))
+
+    #set last active to nil and destroy User => Room relationship
+    inactive_users.each do |user|
+      user.last_active = nil
+      user.rooms = [] 
+      user.save
+    end
+
+    #return the inactive users found
+    inactive_users
+  end
   	  		
 end

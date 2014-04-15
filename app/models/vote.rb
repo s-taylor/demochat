@@ -1,4 +1,4 @@
-n # == Schema Information
+# == Schema Information
 #
 # Table name: votes
 #
