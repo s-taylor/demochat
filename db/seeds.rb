@@ -38,7 +38,7 @@ message2.save
 
 
 # vote's seed file
-vote = room.votes.new(:category => "kick", :room_id => room.id)
-vote.save
-vote2 = room2.votes.new(:category => "kick", :room_id => room.id)
-vote2.save
+# vote = room.votes.new(:category => "kick", :room_id => room.id)
+# vote.save
+# vote2 = room2.votes.new(:category => "kick", :room_id => room.id)
+# vote2.save

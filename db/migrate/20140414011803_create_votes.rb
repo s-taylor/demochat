@@ -4,6 +4,7 @@ class CreateVotes < ActiveRecord::Migration
       t.string :category
       t.integer :target
       t.integer :room_id
+      t.boolean :closed
       t.timestamps
     end
   end

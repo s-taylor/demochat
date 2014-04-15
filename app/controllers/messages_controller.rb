@@ -18,7 +18,8 @@ class MessagesController < ApplicationController
       target.present? && (current_task = Vote.create(
         :category => category,
         :target => target.first.id,
-        :room_id => 1 # fix me
+        :room_id => message.room_id,
+        :closed => false
       ))
       
       current_task.present? && Response.create(
@@ -37,42 +38,75 @@ class MessagesController < ApplicationController
     elsif (/\d+:yes/.match message.text)
       parts = message.text.split(':')
       vote_id = parts[0]
-      Response.create(
-        :vote_id => vote_id,
-        :user_id => current_user.id,
-        :choice => true,
-      )
+      
+      if (Vote.find(vote_id).responses.where(:user_id => current_user.id)).empty?
 
-      #finding SYSTEM user
-      user = User.where('username = ?','SYSTEM').first
+        Response.create(
+          :vote_id => vote_id,
+          :user_id => current_user.id,
+          :choice => true,
+        )
 
-      #create a message against this user
-      message = user.messages.new(params[:message])
-      message.text = "You voted 'Yes' for Poll #{vote_id}" # customise this
-      #make this a private message for the current user
-      message.audience_id = current_user.id
+
+        #finding SYSTEM user
+        user = User.where('username = ?','SYSTEM').first
+
+        #create a message against this user
+        message = user.messages.new(params[:message])
+        message.text = "You voted 'Yes' for Poll #{vote_id}" # customise this
+        #make this a private message for the current user
+        message.audience_id = current_user.id
+        
+      else
+
+        #finding SYSTEM user
+        user = User.where('username = ?','SYSTEM').first
+
+        #create a message against this user
+        message = user.messages.new(params[:message])
+        message.text = "You already vote! Jerk!" # customise this
+        #make this a private message for the current user
+        message.audience_id = current_user.id
+      end
+
 
     elsif (/\d+:no/.match message.text)
       parts = message.text.split(':')
       vote_id = parts[0]
-      Response.create(
-        :vote_id => vote_id,
-        :user_id => current_user.id,
-        :choice => false,
-      )
 
-      #finding SYSTEM user
-      user = User.where('username = ?','SYSTEM').first
+      if (Vote.find(vote_id).responses.where(:user_id => current_user.id)).empty?
 
-      #create a message against this user
-      message = user.messages.new(params[:message])
-      message.text = "You voted 'No' for Poll #{vote_id}" # customise this
-      #make this a private message for the current user
-      message.audience_id = current_user.id
+
+        Response.create(
+          :vote_id => vote_id,
+          :user_id => current_user.id,
+          :choice => false,
+        )
+
+        #finding SYSTEM user
+        user = User.where('username = ?','SYSTEM').first
+
+        #create a message against this user
+        message = user.messages.new(params[:message])
+        message.text = "You voted 'No' for Poll #{vote_id}" # customise this
+        #make this a private message for the current user
+        message.audience_id = current_user.id
+
+      else
+
+        #finding SYSTEM user
+        user = User.where('username = ?','SYSTEM').first
+
+        #create a message against this user
+        message = user.messages.new(params[:message])
+        message.text = "You already vote! Jerk!" # customise this
+        #make this a private message for the current user
+        message.audience_id = current_user.id
+      end
+
 
     end
 
-    # binding.pry
 
     if message.save
       render :json => message.to_json

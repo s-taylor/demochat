@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20140415034953) do
     t.string   "category"
     t.integer  "target"
     t.integer  "room_id"
+    t.boolean  "closed"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
