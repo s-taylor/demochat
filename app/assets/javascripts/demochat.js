@@ -86,7 +86,7 @@ var demoChat = {
     //if a request is already in progress, exit this method (don't run the remaining code)
     if (self.requestInProgress) {
       //Log that message fetch is being aborted
-      helper.log("Messages: Fetch aborted, request already in progress");
+      helper.log("Fetch: Abort! Request already in progress");
       return;
     }
 
@@ -94,7 +94,7 @@ var demoChat = {
     self.requestInProgress = true;
 
     //Log which messages are being fetched
-    helper.logArray(["Messages: Fetch Messages with id > ",this.lastMsgID]);
+    helper.logArray(["Fetch: Requesting Messages with id > ",this.lastMsgID," and User List"]);
 
     //submit ajax request to fetch all messages
     $.ajax({
