@@ -49,6 +49,8 @@ class MessagesController < ApplicationController
       #create a message against this user
       message = user.messages.new(params[:message])
       message.text = "You voted 'Yes' for Poll #{vote_id}" # customise this
+      #make this a private message for the current user
+      message.audience_id = current_user.id
 
     elsif (/\d+:no/.match message.text)
       parts = message.text.split(':')
@@ -65,6 +67,8 @@ class MessagesController < ApplicationController
       #create a message against this user
       message = user.messages.new(params[:message])
       message.text = "You voted 'No' for Poll #{vote_id}" # customise this
+      #make this a private message for the current user
+      message.audience_id = current_user.id
 
     end
 

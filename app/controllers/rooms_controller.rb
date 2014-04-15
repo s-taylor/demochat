@@ -39,7 +39,11 @@ class RoomsController < ApplicationController
     response = {}
 
     #find the messages required
-    @messages = Message.where("id > ? AND room_id = ?", lastMsgID, roomID)
+    if user_signed_in?
+      @messages = Message.where("id > ? AND room_id = ? AND (audience_id is null OR audience_id = ?)", lastMsgID, roomID, current_user.id)
+    else
+      @messages = Message.where("id > ? AND room_id = ? AND audience_id is null", lastMsgID, roomID)
+    end
 
     #reformat all messages 
     response["messages"] = @messages.map { |message| message.json_format }
