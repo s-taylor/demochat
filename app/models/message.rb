@@ -2,12 +2,13 @@
 #
 # Table name: messages
 #
-#  id         :integer          not null, primary key
-#  room_id    :integer
-#  user_id    :integer
-#  text       :text
-#  created_at :datetime
-#  updated_at :datetime
+#  id          :integer          not null, primary key
+#  room_id     :integer
+#  user_id     :integer
+#  text        :text
+#  created_at  :datetime
+#  updated_at  :datetime
+#  audience_id :integer
 #
 
 class Message < ActiveRecord::Base

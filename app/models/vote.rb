@@ -1,4 +1,4 @@
-n # == Schema Information
+# == Schema Information
 #
 # Table name: votes
 #
@@ -6,7 +6,7 @@ n # == Schema Information
 #  category   :string(255)
 #  target     :integer
 #  room_id    :integer
-#  status     :boolean
+#  closed     :boolean
 #  created_at :datetime
 #  updated_at :datetime
 #
