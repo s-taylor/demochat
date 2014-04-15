@@ -14,6 +14,7 @@ class Room < ActiveRecord::Base
 
   has_many :messages
   has_and_belongs_to_many :users
+  has_many :votes
 
  # Room validation - doesn't allow a space at the start or end when creating a room, 
  # 	and min and max character set to 5 min and 32 max.

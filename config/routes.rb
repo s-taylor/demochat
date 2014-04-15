@@ -1,4 +1,5 @@
 Demochat::Application.routes.draw do
+  
   devise_for :users
 
   root 'home#index', :as => :home
@@ -12,4 +13,8 @@ Demochat::Application.routes.draw do
 
   #route fot AJAX only to inform server of user activity, MUST pass room id of current room (or -1 if none)
   post '/activity/user_active' => 'activity#userActive'
+
+  resources :votes, :only => [:index,:create,:show,:destroy]
+
+  resources :responses, :only => [:index,:create,:show,:destroy]
 end

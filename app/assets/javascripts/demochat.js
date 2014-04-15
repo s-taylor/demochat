@@ -161,6 +161,8 @@ var demoChat = {
   createMessage: function(msgText) {
     //to refer to parent object
     var self = this;
+    //Log that a new message is being created
+    helper.logArray(["Messages: Creating new Message '",msgText,"' for Room ID ",self.roomID])
     //send ajax request to post message content
     $.ajax({
       url: '/messages',

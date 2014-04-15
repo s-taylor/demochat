@@ -30,12 +30,13 @@ class User < ActiveRecord::Base
 
   has_many :messages
   has_and_belongs_to_many :rooms
+  has_many :responses
 
   #validation for username
   #username must be populated, a minimum of 5 characters, maximum of 16 characters and is unique
-	validates :username, :presence => true, length: { minimum: 6, maximum: 20 }, :uniqueness => { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9]+\Z/, message: "only allows alphanumeric characters" } 
+	validates :username, :presence => true, length: { minimum: 5, maximum: 20 }, :uniqueness => { case_sensitive: false }, format: { with: /\A[a-zA-Z0-9]+\Z/, message: "only allows alphanumeric characters" } 
  
   #validation for email at login  
 	validates :email, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
   	  		
-end	
+end
