@@ -71,3 +71,6 @@ gem 'momentjs-rails'
 
 #supports user logins and image uploads
 gem 'rails_12factor'
+
+#added whenever gem to implement server side timers
+gem 'whenever', :require => false
