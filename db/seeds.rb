@@ -2,6 +2,8 @@
 User.destroy_all
 Room.destroy_all
 Message.destroy_all
+Vote.destroy_all
+# Response.destroy_all
 
 # user's seed file
 user = User.new(:username => 'user1', :email => 'user1@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
@@ -12,6 +14,8 @@ user3 = User.new(:username => 'user3', :email => 'user3@user.com', :password => 
 user3.save
 user4 = User.new(:username => 'user4', :email => 'user4@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
 user4.save
+system = User.new(:username => 'system', :email => 'system@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
+system.save
 
 
 # room's seed file

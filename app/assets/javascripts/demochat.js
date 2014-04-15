@@ -112,6 +112,9 @@ var demoChat = {
       //reformat the date using moment.js
       var date = moment(message.created_at).calendar();
       //append a message to the messages.ul
+      if (message.user_id == 0) {
+        message.username = 'system';
+      }
       this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
     },
 
@@ -130,8 +133,11 @@ var demoChat = {
             room_id: self.roomID 
           }
         }
-      }).done(function(){
+      }).done(function(message){
         // update the page with all new messages
+        if (message.user_id == 0) {
+          self.addMessage(message);
+        }
         self.getMessages();
       });
     },
