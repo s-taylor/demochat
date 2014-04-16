@@ -11,3 +11,10 @@
  *= require_self
  *= require_tree .
  */
+
+ p.avatar img{
+ 	width: 64px;
+	height: 64px;
+	border-radius: 200%;
+}
+ }

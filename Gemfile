@@ -53,6 +53,7 @@ group :development do
   gem 'pry-stack_explorer'
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'dotenv-rails'
 end
 
 gem 'devise'
@@ -71,3 +72,9 @@ gem 'momentjs-rails'
 
 #supports user logins and image uploads
 gem 'rails_12factor'
+
+#allows upload of Profile Avatar images to Heroku from Amazon S3
+gem 'carrierwave'
+
+#Interact with a variety of file services #carrierwave handles the fog interaction;
+gem 'fog', "~> 1.3.1"

@@ -15,4 +15,9 @@ class Message < ActiveRecord::Base
 
     belongs_to :user
     belongs_to :room
+
+
+  #validation for chat message
+  #username must be populated and present in the room, a minimum of 1 character, maximum of 512 characters
+  	validates :text, :length => { minimum: 1, maximum: 512 }
 end

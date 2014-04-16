@@ -1,6 +1,6 @@
 <h2>Sign up</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), :html => {:multipart => true}) do |f| %>
   <%= devise_error_messages! %>
 
   <div><%= f.label :email %><br />
@@ -8,6 +8,10 @@
 
   <div><%= f.label :username %><br />
   <%= f.text_field :username, autocomplete: "off" %></div>
+
+  <div><%= f.label :image %><br />
+  <%= f.file_field :image, :accept => "image/gif, image/jpeg, image/svg, image/jpg, image/png" %>
+  </div>
 
   <div><%= f.label :password %><br />
     <%= f.password_field :password, autocomplete: "off" %></div>
@@ -19,3 +23,6 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+
+
+

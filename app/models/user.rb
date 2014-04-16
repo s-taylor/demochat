@@ -20,23 +20,26 @@
 #
 
 class User < ActiveRecord::Base
+  #Provides methods for Image upload      
+    mount_uploader :image, ImageUploader
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+    devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-    attr_accessible :email, :username, :password, :password_confirmation
+    attr_accessible :email, :username, :password, :password_confirmation, :image, :image_cache, :remove_image
 
     has_many :messages
     has_and_belongs_to_many :rooms
 
-#validation for username
+  #validation for username
   #username must be populated, a minimum of 5 characters, maximum of 16 characters and is unique
   	validates :username, :presence => true, length: { minimum: 6, maximum: 20 }, :uniqueness => { case_sensitive: false },
   	format: { with: /\A[a-zA-Z0-9]+\Z/, message: "only allows alphanumeric characters" } 
  
-#validation for email at login  
+  #validation for email at login  
   	#validates :email, :uniqueness => true, :length => { :minimum => 2 }
   	validates :email, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
-  	  		
+
 end	
