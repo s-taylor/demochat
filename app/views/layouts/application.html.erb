@@ -14,7 +14,7 @@
 
     <div id="user">
       <% if user_signed_in? %>
-        <p>User signed in: <%= current_user.username %></p>
+        <span><p>User signed in: <%= current_user.username %></p><p class="avatar"><%= image_tag current_user.image%></p></span>
         <li><%= link_to 'Sign Out', destroy_user_session_path, :method => 'delete' %></li>
       <% else %>
         <li><%= link_to 'Login', new_user_session_path %></li><br>
@@ -41,3 +41,4 @@
 
 </body>
 </html>
+
