@@ -27,7 +27,7 @@ class MessagesController < ApplicationController
       room = Room.find(params["message"]["room_id"])
 
       #perform vote validation and retrieve output
-      result = Vote.validate_msg(room, command, target)
+      result = Vote.validate_msg(current_user, room, command, target)
 
       #if the vote is valid, create it
       if result[:valid]
@@ -42,11 +42,7 @@ class MessagesController < ApplicationController
       end
 
       #create a system message, provide audience id if private
-      if result[:private]
-        Message.system_msg(room, result[:message], current_user.id)
-      else  
-        Message.system_msg(room, result[:message])
-      end
+      Message.system_msg(room, result[:message], result[:audience_id])
 
       #inform the server of success
       render :json => true
