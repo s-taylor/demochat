@@ -40,9 +40,11 @@ class RoomsController < ApplicationController
 
     #find the messages required (include private messages if the user is signed in)
     if user_signed_in?
-      @messages = Message.where("id > ? AND room_id = ? AND (audience_id is null OR audience_id = ?)", lastMsgID, roomID, current_user.id)
+      @messages = Message.where("id > ? AND room_id = ? AND (audience_id is null OR audience_id = ?)", 
+        lastMsgID, roomID, current_user.id).order(:created_at)
     else
-      @messages = Message.where("id > ? AND room_id = ? AND audience_id is null", lastMsgID, roomID)
+      @messages = Message.where("id > ? AND room_id = ? AND audience_id is null",
+       lastMsgID, roomID).order(:created_at)
     end
 
     #reformat all messages 
