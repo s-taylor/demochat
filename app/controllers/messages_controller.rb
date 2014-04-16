@@ -5,114 +5,90 @@ class MessagesController < ApplicationController
 
   def create
 
-    message = current_user.messages.new(params[:message])
+    #from JSON request we receive
+    # params["message"]["text"]
+    # params["message"]["room_id"]
 
-    # If we see a message that looks like a vote, create a new Vote object for it.
-    # We can redo vote detection once we visit Regular Expressions.
-    if (/vote/.match message.text)
-      parts = message.text.split(',') # vote,kick,nix
-      command = parts[0] # vote
-      category = parts[1] # kick
-      target = User.where(:username => parts[2]) # find the user by username
-      
-      target.present? && (current_task = Vote.create(
-        :category => category,
-        :target => target.first.id,
-        :room_id => message.room_id,
-        :closed => false
-      ))
-      
-      current_task.present? && Response.create(
-        :vote_id => current_task.id,
-        :user_id => current_user.id,
-        :choice => true,
-      )
+    #check if vote using Regex and return result (array)
+    vote_array = Vote.check_msg(params["message"]["text"])
 
-      #finding SYSTEM user
-      user = User.where('username = ?','SYSTEM').first
+    #check if a response using Regex and return result (array)
+    response_array = Response.check_msg(params["message"]["text"])
 
-      #create a message against this user
-      message = user.messages.new(params[:message])
-      message.text = "Vote in progress, type either #{current_task.id}:yes or #{current_task.id}:no"
+    #------------------------------------------------
 
-    elsif (/\d+:yes/.match message.text)
-      parts = message.text.split(':')
-      vote_id = parts[0]
-      
-      if (Vote.find(vote_id).responses.where(:user_id => current_user.id)).empty?
+    #if the message is a vote (Vote.check_msg != nil)
+    if vote_array
+      #fetch needed values from the array
+      command = vote_array[1]
+      target = vote_array[2]
 
-        Response.create(
-          :vote_id => vote_id,
-          :user_id => current_user.id,
-          :choice => true,
+      #find the current room object
+      room = Room.find(params["message"]["room_id"])
+
+      #perform vote validation and retrieve output
+      result = Vote.validate_msg(current_user, room, command, target)
+
+      #if the vote is valid, create it
+      if result[:valid]
+        Vote.create(
+          :category => command,
+          :target => result[:target],
+          :room_id => room.id,
+          :closed => false
         )
 
-
-        #finding SYSTEM user
-        user = User.where('username = ?','SYSTEM').first
-
-        #create a message against this user
-        message = user.messages.new(params[:message])
-        message.text = "You voted 'Yes' for Poll #{vote_id}" # customise this
-        #make this a private message for the current user
-        message.audience_id = current_user.id
-        
-      else
-
-        #finding SYSTEM user
-        user = User.where('username = ?','SYSTEM').first
-
-        #create a message against this user
-        message = user.messages.new(params[:message])
-        message.text = "You already vote! Jerk!" # customise this
-        #make this a private message for the current user
-        message.audience_id = current_user.id
+        #TO FIX: CREATE A RESPONSE OF YES FOR THIS VOTE FOR CURRENT USER
       end
 
+      #create a system message, provide audience id if private
+      Message.system_msg(room, result[:message], result[:audience_id])
 
-    elsif (/\d+:no/.match message.text)
-      parts = message.text.split(':')
-      vote_id = parts[0]
+      #inform the server of success
+      render :json => true
 
-      if (Vote.find(vote_id).responses.where(:user_id => current_user.id)).empty?
+    #------------------------------------------------
 
+    #if the message is a response (Response.check_msg != nil)
+    elsif response_array
+      
+      #get the response
+      response = response_array[2].downcase
 
-        Response.create(
-          :vote_id => vote_id,
-          :user_id => current_user.id,
-          :choice => false,
-        )
+      #find the current room object
+      room = Room.find(params["message"]["room_id"])
 
-        #finding SYSTEM user
-        user = User.where('username = ?','SYSTEM').first
+      #is there a vote in progress for this room?
+      open_vote = room.votes.where('closed is false').first
 
-        #create a message against this user
-        message = user.messages.new(params[:message])
-        message.text = "You voted 'No' for Poll #{vote_id}" # customise this
-        #make this a private message for the current user
-        message.audience_id = current_user.id
+      #TO FIX: MAKE SURE THE USER CANNOT RESPOND TO THE SAME VOTE TWICE!
 
+      if open_vote
+        open_vote.responses.create(:user_id => current_user.id, :choice => true)
+        Message.system_msg(room, "Your vote of #{response} has been recorded", current_user.id)
       else
-
-        #finding SYSTEM user
-        user = User.where('username = ?','SYSTEM').first
-
-        #create a message against this user
-        message = user.messages.new(params[:message])
-        message.text = "You already vote! Jerk!" # customise this
-        #make this a private message for the current user
-        message.audience_id = current_user.id
+        Message.system_msg(room, "There are no open votes for this room", current_user.id)
       end
 
+      #inform the server of success
+      render :json => true
 
-    end
+    #------------------------------------------------
 
-
-    if message.save
-      render :json => message.to_json
+    #it's not a vote or response, it's a message
     else
-      render :json => false
-    end
-  end
 
-end
+      #create a new message
+      message = current_user.messages.new(params[:message])
+
+      if message.save
+        render :json => message.to_json
+      else
+        render :json => false
+      end
+
+    end#if vote_array
+
+  end#def create
+
+end#class MessagesController
