@@ -40,6 +40,8 @@ class User < ActiveRecord::Base
 	validates :email, :presence => true, :uniqueness => true, :length => { :minimum => 2 }
 
   def self.check_inactive
+    #log message that cleanup is happening
+    puts "performing inactive users cleanup"
     #find inactive users (users who have not pinged the server within the last 60 seconds)
     inactive_users = self.where('last_active < ?',(Time.now - 60))
     # inactive_users = User.where('last_active < ?',(Time.now - 60))

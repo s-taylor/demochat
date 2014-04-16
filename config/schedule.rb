@@ -19,6 +19,8 @@
 
 # Learn more: http://github.com/javan/whenever
 
+set :output, "/log/cron_log.log"
+
 every 1.minutes do
   runner "User.check_inactive", :environment => :development
 end
