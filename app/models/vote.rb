@@ -81,7 +81,6 @@ class Vote < ActiveRecord::Base
     response
   end#def self.validate_msg
 
-  # class << self
   # private
   def self.mute_valid(target_user)
     response = {
