@@ -21,4 +21,14 @@ class Room < ActiveRecord::Base
   validates :name, length: { minimum: 5, maximum: 32 }, :uniqueness => true,
   format: { with: /\A\b[a-zA-Z0-9]+\b\Z/, message: "only allows alphanumeric characters without spaces" } 
 
+  #get all usernames for users in the room
+  # def usernames
+  #   self.users.pluck(:username)
+  # end
+
+  #find if user exists in this room ONLY, case insensitive (if not found will return nil)
+  def find_user(username)
+    self.users.where('username = ?',username).first
+  end
+
 end

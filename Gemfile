@@ -78,3 +78,7 @@ gem 'carrierwave'
 
 #Interact with a variety of file services #carrierwave handles the fog interaction;
 gem 'fog', "~> 1.3.1"
+
+#added whenever gem to implement server side timers
+gem 'whenever', :require => false
+
