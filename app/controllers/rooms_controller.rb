@@ -38,7 +38,7 @@ class RoomsController < ApplicationController
     #setup a response hash
     response = {}
 
-    #find the messages required
+    #find the messages required (include private messages if the user is signed in)
     if user_signed_in?
       @messages = Message.where("id > ? AND room_id = ? AND (audience_id is null OR audience_id = ?)", lastMsgID, roomID, current_user.id)
     else
