@@ -71,3 +71,6 @@ gem 'momentjs-rails'
 
 #supports user logins and image uploads
 gem 'rails_12factor'
+
+# bootstrap! for styling
+gem 'bootstrap-sass'
