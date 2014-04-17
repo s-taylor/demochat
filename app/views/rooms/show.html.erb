@@ -8,12 +8,20 @@
 <ul id="messages">
 </ul>
 
+
 <% if user_signed_in? %>
 
-  <form id="msg-form">
+<!--   <form id="msg-form">
     <input type="text" name="text" id="msg-input">
-  </form>
+  </form> -->
+
+  <section class='textarea'>
+    <form id="msg-form">
+      <!-- <textarea cols='1' placeholder="messages.."  id="msg-input"></textarea> -->
+      <input type="text" name="text" id="msg-input" required autofocus>
+    </form>
+  </section>
 
 <% else %>
-  <p>You must sign in to send messages</p>
+  <p>You must <strong><%= link_to 'Login', new_user_session_path, :class => 'login' %></strong> to send messages</p>
 <% end %>

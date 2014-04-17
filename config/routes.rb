@@ -1,6 +1,7 @@
 Demochat::Application.routes.draw do
   
-  devise_for :users
+  # devise_for :users  #origin(change)
+  devise_for :users, :controllers => {sessions: 'sessions'}
 
   root 'home#index', :as => :home
 

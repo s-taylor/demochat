@@ -19,7 +19,7 @@ class Room < ActiveRecord::Base
 
   #Room validation - doesn't allow a space at the start or end when creating a room, 
   #and min and max character set to 5 min and 32 max.
-  validates :name, length: { minimum: 5, maximum: 32 }, :uniqueness => true,
+  validates :name, length: { minimum: 5, maximum: 20 }, :uniqueness => true,
   format: { with: /\A\b[a-zA-Z0-9]+\b\Z/, message: "only allows alphanumeric characters without spaces" }
 
   #find if user exists in this room ONLY, case insensitive (if not found will return nil)

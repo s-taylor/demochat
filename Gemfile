@@ -79,3 +79,5 @@ gem 'carrierwave'
 #Interact with a variety of file services #carrierwave handles the fog interaction;
 gem 'fog', "~> 1.3.1"
 
+# bootstrap! for styling
+gem 'bootstrap-sass'

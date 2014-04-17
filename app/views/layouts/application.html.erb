@@ -2,12 +2,13 @@
 <html>
 <head>
   <title>Demochat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-  
+
 <div id="container">
   <ul class="links clearfix">
     <li><%= link_to 'Home', home_path %></li>
@@ -15,15 +16,17 @@
     <div id="user">
       <% if user_signed_in? %>
         <span><p>User signed in: <%= current_user.username %></p><p class="avatar"><%= image_tag current_user.image%></p></span>
+        <li><%= link_to 'Edit Profile', edit_user_registration_path, :class => 'edit' %></li>
         <li><%= link_to 'Sign Out', destroy_user_session_path, :method => 'delete' %></li>
       <% else %>
-        <li><%= link_to 'Login', new_user_session_path %></li><br>
+        <li><%= link_to 'Login', new_user_session_path, :class => 'login' %></li><br>
+        <li><%= link_to 'Sign up', new_user_registration_path, :class => 'signup' %></li><br>
       <% end %>
     </div>
   </ul>
   <p><b>Test User details:</b> email = user1@user.com, password = abcd1234</p>
 
-  <hr>
+  <br>
 
   <%= yield %>
 
@@ -38,6 +41,54 @@
     });
   </script>
 <% end %>
+
+
+<!-- begin:for lightbox -->
+<div style='display:none'>
+  <div id='signin_form' style='padding:10px; background:#fff;'>
+    <%= render :partial => 'devise/sessions/new' %>
+  </div>
+  <div id='signup_form' style='padding:10px; background:#fff;'>
+    <%= render :partial => 'devise/registrations/new' %>
+  </div>
+  <div id='edit_form' style='padding:10px; background:#fff;'>
+    <%= render :partial => 'devise/registrations/edit' %>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('a.login').colorbox({inline:true, href:"#signin_form", opacity:0.5 , rel:'group1', closeButton: false, speed: 250});
+        $('a.signup').colorbox({inline:true, href:"#signup_form", opacity:0.5 , rel:'group1', closeButton: false, speed: 250});
+        $('a.edit').colorbox({inline:true, href:"#edit_form", opacity:0.5 , rel:'group1', closeButton: false, speed: 250});
+    });
+</script>
+<!-- end: for lightbox -->
+
+
+<!-- for fancy box -->
+<script>
+  // Capture TAB to switch between the Demo page views (input/textarea)
+  (function(){
+    var viewTogglers = $('menu.radio input');
+    
+    $(document).on('keydown', function(e){
+      if( e.key == 'tab' || e.keyCode == 9 ){
+        var $checked = viewTogglers.filter(':checked');
+        var $next = viewTogglers.eq(viewTogglers.index($checked) + 1);
+        if(!$next.length){
+          $next = viewTogglers.first();
+        }
+        $next.prop("checked", true).change();
+          
+        return false;
+      }
+    });
+  })();
+
+  $('section :input').val('').fancyInput()[0];
+  // $('section :input').val('').fancyInput()[0].focus();  // origin (delete if everthing is fine)
+</script>
 
 </body>
 </html>

@@ -1,26 +1,37 @@
 <h1>Welcome to [insert name here]</h1>
 
-<h1>Join a Room</h1>
+<div id='wrap'>
+  <header></header>
+  
+  <div id='content'>
+    <section class='input'>
+        <%= form_for @room do |f| %>
+            <%= f.text_field :name, :placeholder => 'Join a room', :autofocus => true, :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed" %>
+        <% end %>
 
-<% if flash[:no_create_room] %>
-  <p class="welcome"> <%= flash[:no_create_room] %> </p>
-<% end %>
+        <% if flash[:no_create_room] %>
+          <p class="welcome"> <%= flash[:no_create_room] %> </p>
+        <% end %>
 
-<%= form_for @room do |f| %>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-<% end %>
+        <%= form_for @room do |f| %>
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+        <% end %>
 
-<% if @room.errors.any? %>
-  <div>
-    <p><b>Error:</b> Your Room could not be saved:</p>
-    <ul>
-      <% @room.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
+        <% if @room.errors.any? %>
+          <div>
+            <p><b>Error:</b> Your Room could not be saved:</p>
+            <ul>
+              <% @room.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+    </section>
+  </div>
+</div>
+
 
 <!-- Top rooms -->
 <h1> New Top 10 Chat Rooms</h1>
@@ -40,3 +51,4 @@
 		</tr>	
 		<% end %>
 	</table>	
+
