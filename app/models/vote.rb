@@ -9,6 +9,7 @@
 #  closed     :boolean
 #  created_at :datetime
 #  updated_at :datetime
+#  passed     :boolean
 #
 
 class Vote < ActiveRecord::Base
@@ -61,27 +62,28 @@ class Vote < ActiveRecord::Base
 
         #check if target user is valid
         if target_user
-          response = Vote.mute_valid(target_user)
+          response = mute_valid(target_user)
         #mute target is invalid so error
         else
-          response = Vote.mute_invalid_target(current_user)
+          response = mute_invalid_target(current_user)
         end#if target_user
 
       #vote command is invalid so error
       else
-        response = Vote.command_invalid(current_user)
+        response = command_invalid(current_user)
       end#when "mute"
 
     #there is an open vote already  
     else
-      response = Vote.open_vote_exists(current_user)
+      response = open_vote_exists(current_user)
     end
 
     #return the response hash
     response
   end#def self.validate_msg
 
-  # private
+  #---------------------------------------------
+  # PRIVATE CLASS METHODS
   def self.mute_valid(target_user)
     response = {
       :valid => true,
@@ -117,4 +119,6 @@ class Vote < ActiveRecord::Base
       :target => nil
     }
   end
+
+  private_class_method :mute_valid, :mute_invalid_target, :command_invalid, :open_vote_exists
 end

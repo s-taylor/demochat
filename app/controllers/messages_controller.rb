@@ -9,6 +9,16 @@ class MessagesController < ApplicationController
     # params["message"]["text"]
     # params["message"]["room_id"]
 
+    #find the current room object
+    room = Room.find(params["message"]["room_id"])
+
+    if room.is_muted?(current_user)
+      Message.system_msg(room, "You have been Muted and cannot send messages for 1 hour", current_user.id)
+      render :json => true
+      #prevent running any further code
+      return
+    end
+
     #check if vote using Regex and return result (array)
     vote_array = Vote.check_msg(params["message"]["text"])
 
@@ -23,19 +33,23 @@ class MessagesController < ApplicationController
       command = vote_array[1]
       target = vote_array[2]
 
-      #find the current room object
-      room = Room.find(params["message"]["room_id"])
-
       #perform vote validation and retrieve output
       result = Vote.validate_msg(current_user, room, command, target)
 
       #if the vote is valid, create it
       if result[:valid]
-        Vote.create(
+        vote = Vote.create(
           :category => command,
           :target => result[:target],
           :room_id => room.id,
           :closed => false
+        )
+
+        #create a corresponding response for the vote
+        vote.present? && Response.create(
+          :vote_id => vote.id,
+          :user_id => current_user.id,
+          :choice => true,
         )
 
         #TO FIX: CREATE A RESPONSE OF YES FOR THIS VOTE FOR CURRENT USER
@@ -54,9 +68,6 @@ class MessagesController < ApplicationController
       
       #get the response
       response = response_array[2].downcase
-
-      #find the current room object
-      room = Room.find(params["message"]["room_id"])
 
       #is there a vote in progress for this room?
       open_vote = room.votes.where('closed is false').first

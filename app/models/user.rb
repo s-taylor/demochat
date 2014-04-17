@@ -16,8 +16,8 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  username               :string(255)
-#  image                  :text
 #  last_active            :datetime
+#  image                  :string(255)
 #
 
 class User < ActiveRecord::Base

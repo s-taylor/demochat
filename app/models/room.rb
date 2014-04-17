@@ -21,14 +21,23 @@ class Room < ActiveRecord::Base
   validates :name, length: { minimum: 5, maximum: 32 }, :uniqueness => true,
   format: { with: /\A\b[a-zA-Z0-9]+\b\Z/, message: "only allows alphanumeric characters without spaces" } 
 
-  #get all usernames for users in the room
-  # def usernames
-  #   self.users.pluck(:username)
-  # end
-
   #find if user exists in this room ONLY, case insensitive (if not found will return nil)
   def find_user(username)
     self.users.where('username = ?',username).first
   end
 
+  def is_muted?(user)
+    #find current time minus 1 hour (this is the length of time a user is muted for)
+    time = Time.now - (60 * 60)
+
+    #find a mute vote for this user in the current room where it is closed and passed
+    mute_vote = self.votes.where('target = ? AND DATE(created_at) > DATE(?) AND closed is true AND passed is true',
+      user.id, time).first
+
+    #return true if mute vote exists or false if not
+    mute_vote ? true : false
+  end
 end
+
+# user = User.find(16)
+# room = Room.find(10)
