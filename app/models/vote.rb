@@ -21,9 +21,12 @@ class Vote < ActiveRecord::Base
   has_many :responses
 
   def close
+    #count yes, no and total votes
     yes = self.responses.where('choice = true').count
     no = self.responses.where('choice = false').count
     total_responses = yes + no
+
+    #determine outcome (% of yes votes)
     outcome = yes.to_f / total_responses.to_f
 
     #set vote to closed
@@ -46,6 +49,23 @@ class Vote < ActiveRecord::Base
     end
 
     self.save
+  end
+
+  #---------------------------------------------
+  # CLASS METHODS
+
+  def self.check_to_close
+    #current time minus 5 minutes (in UTC)
+    time = Time.now.utc - (5 * 60)
+
+    #find votes created more than 5 minutes ago
+    votes = Vote.where('created_at < ? AND closed is false',time)
+
+    #close each vote found
+    votes.each { |vote| vote.close }
+
+    #return the votes closed
+    votes
   end
 
   #check if a text string is a vote and return vote components as Regex
@@ -96,6 +116,7 @@ class Vote < ActiveRecord::Base
 
   #---------------------------------------------
   # PRIVATE CLASS METHODS
+
   def self.mute_valid(target_user)
     output = {
       :valid => true,

@@ -1,7 +1,7 @@
 class ActivityController < ApplicationController
 
   def userActive
-    current_user.last_active = Time.now
+    current_user.last_active = Time.now.utc
 
     #convert room id to integer
     room_id = params[:room_id].to_i
