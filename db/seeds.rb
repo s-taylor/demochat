@@ -1,9 +1,22 @@
 # Seed files
+Task.destroy_all
+
 User.destroy_all
 Room.destroy_all
 Message.destroy_all
 Vote.destroy_all
 Response.destroy_all
+
+#task seed file (DO NOT MODIFY)
+task = Task.create(:name => 'close_votes', 
+                   :description => 'To perform closing votes task for votes that have been open for 5 minutes',
+                   :frequency => 5,
+                   :counter => 0)
+
+task = Task.create(:name => 'users_rooms', 
+                   :description => 'To remove rooms from users that have been active for more than 1 minute',
+                   :frequency => 1,
+                   :counter => 0)
 
 # user's seed file
 user = User.new(:username => 'testuser1', :email => 'user1@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
