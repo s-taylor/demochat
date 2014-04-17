@@ -16,8 +16,8 @@
 #  created_at             :datetime
 #  updated_at             :datetime
 #  username               :string(255)
-#  image                  :text
 #  last_active            :datetime
+#  image                  :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
     #log message that cleanup is happening
     puts "performing inactive users cleanup"
     #find inactive users (users who have not pinged the server within the last 60 seconds)
-    inactive_users = self.where('last_active < ?',(Time.now - 60))
+    inactive_users = self.where('last_active < ?',(Time.now.utc - 60))
     # inactive_users = User.where('last_active < ?',(Time.now - 60))
 
     #set last active to nil and destroy User => Room relationship
