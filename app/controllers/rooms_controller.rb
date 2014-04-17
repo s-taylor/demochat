@@ -7,22 +7,28 @@ class RoomsController < ApplicationController
   end
 
   def create
-    input = params[:room]["name"]
-    #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
-    room = Room.where(:name => input).first
 
-    if room != nil
-      redirect_to room_path(room.id)
+    if current_user == nil
+      redirect_to home_path, flash: {no_create_room: "You have to login to create a room" }
+
     else
-      @room = Room.new(params[:room])
-      @room.save
-      if @room.save
-        redirect_to @room
+      input = params[:room]["name"]
+      #CHANGE THIS TO A LIKE MATCH (IGNORE CASE)
+      room = Room.where(:name => input).first
+
+      if room != nil
+        redirect_to room_path(room.id)
       else
-        @rooms = Room.all
-        render :template => "home/index"  
-      end
-    end#end of if
+        @room = Room.new(params[:room])
+        @room.save
+        if @room.save
+          redirect_to @room
+        else
+          @rooms = Room.all
+          render :template => "home/index"  
+        end
+      end#end of if
+    end  
   end#end of create
 
   def show

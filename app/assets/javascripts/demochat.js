@@ -7,6 +7,9 @@ $(document).ready(function () {
   //setup js for a new page
   demoChat.newPage();
 
+  //setup dynatable
+  $("#top-rooms").dynatable();
+
   //--------------------------------------------
   // CODE FOR ROOMS
   //--------------------------------------------

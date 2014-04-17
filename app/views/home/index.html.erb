@@ -2,6 +2,10 @@
 
 <h1>Join a Room</h1>
 
+<% if flash[:no_create_room] %>
+  <p class="welcome"> <%= flash[:no_create_room] %> </p>
+<% end %>
+
 <%= form_for @room do |f| %>
     <%= f.label :name %>
     <%= f.text_field :name %>
@@ -18,12 +22,21 @@
   </div>
 <% end %>
 
-<h1>Top 10 Chat Rooms</h1>
+<!-- Top rooms -->
+<h1> New Top 10 Chat Rooms</h1>
+	<table id="top-rooms">
+		<thead>
+		  <th>
+			<td>Room Name</td>
+			<td>Room Size (by users)</td>
+		  </th>
+		</thead>
 
-<ul id="rooms_container">
-    <% @rooms.each do |room| %>
-        <li><%= link_to room.name, room_path(room.id) %></li>
-    <% end %>
-</ul>
-	
-
+		<% @rooms.each do |room| %>
+		<tr>
+			<td></td>
+			<td><%= link_to room.name, room %></td>
+			<td><%= room.users.length %></td>
+		</tr>	
+		<% end %>
+	</table>	

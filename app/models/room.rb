@@ -10,7 +10,8 @@
 #
 
 class Room < ActiveRecord::Base
-  attr_accessible :name, :description
+
+  attr_accessible :name, :description, :current_user
 
   has_many :messages
   has_and_belongs_to_many :users
@@ -19,7 +20,7 @@ class Room < ActiveRecord::Base
  # Room validation - doesn't allow a space at the start or end when creating a room, 
  # 	and min and max character set to 5 min and 32 max.
   validates :name, length: { minimum: 5, maximum: 32 }, :uniqueness => true,
-  format: { with: /\A\b[a-zA-Z0-9]+\b\Z/, message: "only allows alphanumeric characters without spaces" } 
+  format: { with: /\A\b[a-zA-Z0-9]+\b\Z/, message: "only allows alphanumeric characters without spaces" }
 
   #get all usernames for users in the room
   # def usernames
@@ -30,5 +31,6 @@ class Room < ActiveRecord::Base
   def find_user(username)
     self.users.where('username = ?',username).first
   end
-
 end
+
+
