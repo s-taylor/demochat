@@ -20,21 +20,33 @@ class Vote < ActiveRecord::Base
   belongs_to :room
   has_many :responses
 
-  # def close_vote
-  #   yes = self.responses.where('choice = true').count
-  #   no = self.responses.where('choice = false').count
-  #   total_votes = yes + no
-  #   calculate = yes.to_f / total_votes.to_f
+  def close
+    yes = self.responses.where('choice = true').count
+    no = self.responses.where('choice = false').count
+    total_responses = yes + no
+    outcome = yes.to_f / total_responses.to_f
 
-  #   if calculate > 0.5
-  #     puts "vote success"
-  #     return true
-  #     User.kick(self.target)
-  #   else
-  #     puts "vote fail"
-  #     return false
-  #   end
-  # end
+    #set vote to closed
+    self.closed = true
+
+    #find target user
+    username = User.find(self.target).username
+
+    # if participation < 0.2
+      #OUTPUT INADEQUATE PARTICIPATION
+      # passed = false
+    if outcome > 0.5
+      #OUTPUT VOTE SUCCESSFUL (X% voted yes)
+      self.passed = true
+      Message.system_msg(self.room, "#{self.category} vote against #{username} was successful! #{yes} users voted yes and #{no} users voted no. #{username} will be unable to message for 1 hour", nil)
+    else
+      #OUTPUT VOTE UNSUCCESSFUL (X% voted yes)
+      self.passed = false
+      Message.system_msg(self.room, "#{self.category} vote against #{username} was unsuccessful! #{yes} users voted yes and #{no} users voted no.", nil)
+    end
+
+    self.save
+  end
 
   #check if a text string is a vote and return vote components as Regex
   def self.check_msg(text)
@@ -44,8 +56,8 @@ class Vote < ActiveRecord::Base
 
   #check if the vote is valid (requires 'room' object, 'command' as text, 'target' as text)
   def self.validate_msg(current_user, room, command, target)
-    #to store the response
-    response = nil
+    #to store the output
+    output = nil
 
     #find any open votes for this room
     open_vote = room.votes.where('closed is false').first
@@ -62,30 +74,30 @@ class Vote < ActiveRecord::Base
 
         #check if target user is valid
         if target_user
-          response = mute_valid(target_user)
+          output = mute_valid(target_user)
         #mute target is invalid so error
         else
-          response = mute_invalid_target(current_user)
+          output = mute_invalid_target(current_user)
         end#if target_user
 
       #vote command is invalid so error
       else
-        response = command_invalid(current_user)
+        output = command_invalid(current_user)
       end#when "mute"
 
     #there is an open vote already  
     else
-      response = open_vote_exists(current_user)
+      output = open_vote_exists(current_user)
     end
 
-    #return the response hash
-    response
+    #return the output hash
+    output
   end#def self.validate_msg
 
   #---------------------------------------------
   # PRIVATE CLASS METHODS
   def self.mute_valid(target_user)
-    response = {
+    output = {
       :valid => true,
       :message => "Mute Vote Initiated for User: \"#{target_user.username}\", type \"Respond Yes\" or \"Respond No\"",
       :audience_id => nil,
@@ -94,7 +106,7 @@ class Vote < ActiveRecord::Base
   end
 
   def self.mute_invalid_target(current_user)
-    response = {
+    output = {
       :valid => false,
       :message => "Your target for a mute vote is invalid, target must be a user in this room, check username",
       :audience_id => current_user.id,
@@ -103,7 +115,7 @@ class Vote < ActiveRecord::Base
   end
 
   def self.command_invalid(current_user)
-    response = {
+    output = {
       :valid => false,
       :message => "Your vote command is invalid, vote commands available are \"mute\".",
       :audience_id => current_user.id,
@@ -112,7 +124,7 @@ class Vote < ActiveRecord::Base
   end
 
   def self.open_vote_exists(current_user)
-    response = {
+    output = {
       :valid => false,
       :message => "An open vote already exists for this room, please wait until this is closed",
       :audience_id => current_user.id,

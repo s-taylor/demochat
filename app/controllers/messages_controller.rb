@@ -36,6 +36,9 @@ class MessagesController < ApplicationController
       #perform vote validation and retrieve output
       result = Vote.validate_msg(current_user, room, command, target)
 
+      #create a system message, provide audience id if private
+      Message.system_msg(room, result[:message], result[:audience_id])
+
       #if the vote is valid, create it
       if result[:valid]
         vote = Vote.create(
@@ -52,11 +55,8 @@ class MessagesController < ApplicationController
           :choice => true,
         )
 
-        #TO FIX: CREATE A RESPONSE OF YES FOR THIS VOTE FOR CURRENT USER
+        Message.system_msg(room, "Your response of yes has automatically been recorded for your vote", current_user.id)
       end
-
-      #create a system message, provide audience id if private
-      Message.system_msg(room, result[:message], result[:audience_id])
 
       #inform the server of success
       render :json => true
@@ -67,19 +67,19 @@ class MessagesController < ApplicationController
     elsif response_array
       
       #get the response
-      response = response_array[2].downcase
+      response_text = response_array[2].downcase
+      choice = response_text == "yes" ? true : false
 
-      #is there a vote in progress for this room?
-      open_vote = room.votes.where('closed is false').first
+      #call the response validation and retrieve output
+      result = Response.validate_msg(current_user, room, response_text)
 
-      #TO FIX: MAKE SURE THE USER CANNOT RESPOND TO THE SAME VOTE TWICE!
-
-      if open_vote
-        open_vote.responses.create(:user_id => current_user.id, :choice => true)
-        Message.system_msg(room, "Your vote of #{response} has been recorded", current_user.id)
-      else
-        Message.system_msg(room, "There are no open votes for this room", current_user.id)
+      #if the response is valid, create it
+      if result[:valid]
+        result[:open_vote].responses.create(:user_id => current_user.id, :choice => choice)
       end
+      
+      #create a system message for the user
+      Message.system_msg(room, result[:message], current_user.id)
 
       #inform the server of success
       render :json => true
