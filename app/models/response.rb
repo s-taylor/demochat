@@ -18,7 +18,7 @@ class Response < ActiveRecord::Base
 
   def self.check_msg(text)
     #return [2] = yes/no (or Yes/No)
-    vote_text = /(respond|response) ([Yy]es|[Nn]o)/.match text
+    vote_text = /([Rr]espond|[Rr]esponse) ([Yy]es|[Nn]o)/.match text
   end
 
   def self.validate_msg(current_user, room, response_text)
