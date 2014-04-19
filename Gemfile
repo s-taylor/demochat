@@ -56,6 +56,7 @@ group :development do
   gem 'dotenv-rails'
 end
 
+#added for user authentication
 gem 'devise'
 
 #prevent mass assignment to attributes not explicitly allowed
