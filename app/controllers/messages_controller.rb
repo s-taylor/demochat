@@ -13,7 +13,9 @@ class MessagesController < ApplicationController
     room = Room.find(params["message"]["room_id"])
 
     if room.is_muted?(current_user)
+      #create a private system message to inform the user they are muted
       Message.system_msg(room, "You have been Muted and cannot send messages for 1 hour", current_user.id)
+      #inform json request of success
       render :json => true
       #prevent running any further code
       return
