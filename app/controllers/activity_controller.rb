@@ -20,8 +20,8 @@ class ActivityController < ApplicationController
     #save the user to save new relationships
     current_user.save
 
-    #call the update_state task
-    update_state
+    #call run_tasks
+    run_tasks
 
     #inform the client this request was successful
     render :json => true
@@ -29,36 +29,36 @@ class ActivityController < ApplicationController
   end
 
   private
-  def update_state
+  def run_tasks
+    #REFACTOR IDEA
+    #Pull all tasks out of the database and loop through each.
+    #I could use eval(Task.command) to execute the specific command specified by the task
+
     close_votes_task = Task.find_by_name 'close_votes'
     users_rooms_task = Task.find_by_name 'users_rooms'
 
-    puts "--------------------------"
-    puts "launching update state"
-    puts "--------------------------"
+    puts '----------------------------'
+    puts 'Checking for Tasks to run...'
+    puts '----------------------------'
 
-    # binding.pry
-
-    if (close_votes_task.updated_at > close_votes_task.frequency.minutes.ago.utc)
-      #do nothing
-    else
+    #task to run every 5 minutes
+    unless (close_votes_task.updated_at > close_votes_task.frequency.minutes.ago.utc)
       Vote.check_to_close  
       close_votes_task.counter += 1
       close_votes_task.save
-      puts "--------------------------"
-      puts "launching close votes task"
-      puts "--------------------------"
+      puts '--------------------------'
+      puts 'Launching Close Votes Task'
+      puts '--------------------------'
     end
 
-    if (users_rooms_task.updated_at > users_rooms_task.frequency.minutes.ago.utc)
-      #do nothing
-    else
+    #task to run every minute
+    unless (users_rooms_task.updated_at > users_rooms_task.frequency.minutes.ago.utc)
       User.check_inactive
       users_rooms_task.counter += 1
       users_rooms_task.save
-      puts "-------------------------"
-      puts "launching user rooms task"
-      puts "-------------------------"
+      puts '-----------------------------------'
+      puts 'Launching User > Rooms Cleanup Task'
+      puts '-----------------------------------'
     end
 
 
