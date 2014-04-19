@@ -16,11 +16,31 @@ class Response < ActiveRecord::Base
     belongs_to :user
     belongs_to :vote
 
+  #check if message text is a response and return response components as Regex
   def self.check_msg(text)
     #return [2] = yes/no (or Yes/No)
     vote_text = /([Rr]espond|[Rr]esponse) ([Yy]es|[Nn]o)/.match text
   end
 
+  #validate the response and if valid, create it
+  def self.message_to_response(user, room, response_text)
+
+    #call the response validation and retrieve output
+    result = Response.validate_msg(user, room, response_text)
+
+    #convert response text to a true or false
+    choice = response_text.downcase == "yes" ? true : false
+
+    #if the response is valid, create it
+    if result[:valid]
+      result[:open_vote].responses.create(:user_id => user.id, :choice => choice)
+    end
+    
+    #create a system message for the user
+    Message.system_msg(room, result[:message], user.id)
+  end
+
+  #check if the response is valid
   def self.validate_msg(current_user, room, response_text)
     #to store the output
     output = nil
