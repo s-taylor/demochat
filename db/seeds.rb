@@ -1,22 +1,29 @@
-# Seed files
-Task.destroy_all
-
+# Reset the database
 User.destroy_all
 Room.destroy_all
 Message.destroy_all
 Vote.destroy_all
 Response.destroy_all
 
-#task seed file (DO NOT MODIFY)
+#----------------------------------------------------
+
+#required seeds, DO NOT MODIFY!
+Task.destroy_all
+
 task = Task.create(:name => 'close_votes', 
-                   :description => 'To perform closing votes task for votes that have been open for 5 minutes',
-                   :frequency => 5,
+                   :command => 'Vote.check_to_close',
+                   :frequency => 5, #in minutes
                    :counter => 0)
 
 task = Task.create(:name => 'users_rooms', 
-                   :description => 'To remove rooms from users that have been active for more than 1 minute',
-                   :frequency => 1,
+                   :command => 'User.check_inactive',
+                   :frequency => 1, #in minutes
                    :counter => 0)
+
+system = User.new(:username => 'SYSTEM', :email => 'system@user.com', :password => 'smnp2204', :password_confirmation => 'smnp2204')
+system.save
+
+#----------------------------------------------------
 
 # user's seed file
 user = User.new(:username => 'testuser1', :email => 'user1@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
@@ -27,8 +34,7 @@ user3 = User.new(:username => 'testuser3', :email => 'user3@user.com', :password
 user3.save
 user4 = User.new(:username => 'testuser4', :email => 'user4@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
 user4.save
-system = User.new(:username => 'SYSTEM', :email => 'system@user.com', :password => 'abcd1234', :password_confirmation => 'abcd1234')
-system.save
+
 
 
 # room's seed file
@@ -48,10 +54,3 @@ message.save
 message2 = room.messages.new(:text => "second message in Simon's room?")
 message2.user_id = user.id
 message2.save
-
-
-# vote's seed file
-# vote = room.votes.new(:category => "kick", :room_id => room.id)
-# vote.save
-# vote2 = room2.votes.new(:category => "kick", :room_id => room.id)
-# vote2.save

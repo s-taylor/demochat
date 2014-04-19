@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20140417062958) do
 
   create_table "tasks", force: true do |t|
     t.string   "name"
-    t.text     "description"
+    t.string   "command"
     t.integer  "frequency"
     t.integer  "counter"
     t.datetime "created_at"
