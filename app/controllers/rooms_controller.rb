@@ -55,7 +55,7 @@ class RoomsController < ApplicationController
     response["messages"] = @messages.map { |message| message.json_format }
 
     #find all of the users for this room (returning username ONLY)
-    response["users"] = Room.find(roomID).users.pluck(:username)
+    response["users"] = Room.find(roomID).users.select('username')
 
     #send response to client
     respond_to do |format|
