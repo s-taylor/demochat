@@ -171,7 +171,7 @@ var demoChat = {
   //takes a single message object and adds it to the page
   addMessage: function (message) {
     //reformat the date using moment.js
-    message.date = moment(message.date).format('d MMM - h:mma');
+    message.date = moment(message.date).format('D MMM - h:mma');
     //append a message to the messages.ul using the messages template
     this.$messagesList.append(this.message_temp(message));
   },
