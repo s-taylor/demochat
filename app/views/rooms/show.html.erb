@@ -1,13 +1,11 @@
 
 <div class="chatroom">
-  <h2 class="white"><%= @room.name %></h2>
+  <h2 class="white"><span><a href="/" class="white grow">Home  </a></span><span class="glyphicon glyphicon-chevron-right"></span>  <%= @room.name %></h2>
   <div class="participants">
     <h5 class="grow text-primary">Online users</h5>
     <hr class="style">
     <ul id="users" class="participant-list">
       <li id="" class="participant-list-item offline">
-        <!-- <span class="participant-list-avatar" style="background-image: url( {{= image }} );"></span>
-        <span class="participant-list-name">Nix</span> -->
       </li>
     </ul>
   </div>
@@ -47,13 +45,12 @@
 <script>
   $(document).ready(function(){
     $('.messages_container').scroll(function () {
-      // var totalMsg = $(this).scrollTop();
-      // if (totalMsg < (totalMsg * (80/100))) {
-      //   $('#back-to-bottom').fadeIn();
-      // } else {
-      //   $('#back-to-bottom').fadeOut();
-      // }
-      $('#back-to-bottom').fadeIn();
+      var $msg_cont = $('.messages_container');
+      if ($msg_cont.scrollTop() < ($msg_cont[0].scrollHeight * (70/100))) {
+        $('#back-to-bottom').fadeIn();
+      } else {
+        $('#back-to-bottom').fadeOut();
+      }
     });
     // scroll down to the bottom
     $('#back-to-bottom').click(function () {

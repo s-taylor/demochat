@@ -24,28 +24,7 @@
 <body>
 
   <div class="container">
-    <div class="logo-container">
-      <a href="/"><img src="http://i29.photobucket.com/albums/c275/nixsiow/Demochattic_zps514b849e.png" class="logo rotate"></a>
-    </div>
-
-    <div id="current_user">
-
-    </div>
-
-    <div id="user">
-      <% if user_signed_in? %>
-        <!-- do nothing -->
-      <% else %>
-        <div class="signout_view">
-          <button class="btn btn-primary grow" data-toggle="modal" data-target="#signinModal">Sign in</button>
-          
-          <button class="btn btn-primary grow" data-toggle="modal" data-target="#signupModal">Sign up</button>
-        </div>
-      <% end %>
-    </div>
-
     <%= yield %>
-
   </div>
 
 
@@ -90,13 +69,13 @@
 
   <!-- template for current user details -->
   <script type="text/underscore-template" id="current_user_template">
-    <kbd class="white">{{= username }}</kbd>
+    <button class="btn btn-primary grow" data-toggle="modal" data-target="#editModal">Edit</button>
+    <%= button_to 'Sign Out', destroy_user_session_path, :method => 'delete', :class => 'btn btn-primary signout_btn grow' %>
     <div class="avatar">
       {{ if (image !== null) { }}
         <span><img src="{{= image }}"></span>
       {{ } }}
-      <button class="btn btn-primary grow" data-toggle="modal" data-target="#editModal">Edit</button>
-      <%= button_to 'Sign Out', destroy_user_session_path, :method => 'delete', :class => 'btn btn-primary signout_btn grow' %>
+      <kbd class="white">{{= username }}</kbd>
     </div>
   </script>
 

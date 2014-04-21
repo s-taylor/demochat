@@ -1,5 +1,8 @@
 #Demochattic App
 
+* [Demochattic on Heroku](http://demochattic.herokuapp.com)
+* [Demochattic on GitHub](https://github.com/nizmox/demochat)
+
 - - -
 
 ###Scope:-
@@ -127,6 +130,9 @@ Interact with a variety of file services #carrierwave handles the fog interactio
 
 * gem 'fog', "~> 1.3.1"
 
+Bootstrap ! For styling.
+
+* gem 'bootstrap-sass'
 
 ###API
 Amazon S3 and Carrierwave to allow users to upload their own image files
@@ -142,3 +148,19 @@ Amazon S3 and Carrierwave to allow users to upload their own image files
 **Tarun Moohkey** - For giving us confidence that we don't need to freak out about using Web Sockets and that AJAX is OK.
 
 - - -
+
+###Contributing
+
+We encourage you to contribute to Demochattic. Make Demochattic a better chatting apps !
+
+Fork it
+1. Create your feature branch (git checkout -b my-new-feature)
+2. Commit your changes (git commit -am 'Add some feature')
+3. Push to the branch (git push origin my-new-feature)
+4. Create new Pull Request
+
+- - -
+
+### License
+
+Demochattic is released under the [MIT License](http://www.opensource.org/licenses/MIT).

@@ -22,6 +22,22 @@ div.avatar img{
   border: 2px solid #aaa;
 }
 
+div.avatar {
+  float: right;
+}
+
+a.white {
+  text-decoration: none!important;
+}
+
+a.white:hover {
+  color: white;
+}
+
+.welcome {
+  text-align: center;
+}
+
 html > body {
   height: 100%;
   font-family: 'Poiret One', cursive;
@@ -31,6 +47,10 @@ html > body {
 body {
   background: url('http://static.simpledesktops.com/uploads/desktops/2013/10/29/command2.jpg') center center fixed;
   background-size: cover;
+}
+
+kbd {
+  padding: 10px;
 }
 
 .logo-container {
