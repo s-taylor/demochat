@@ -137,8 +137,14 @@ Amazon S3 and Carrierwave to allow users to upload their own image files
 
 **Joel Turnbull** - For helping us out with tonnes of questions. Particularly for saving us at the 11th hour regarding server side timers and also not going insane with our devise questions, despite him hating the gem!
 
+
 **Mathilda Thompson** - For again helping out with our many many questions. In particular helping us with Carrierwave... yet again!
 
 **Tarun Moohkey** - For giving us confidence that we don't need to freak out about using Web Sockets and that AJAX is OK.
+
+- - -
+
+###Bug List
+
 
 - - -
