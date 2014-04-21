@@ -20,8 +20,8 @@ class ActivityController < ApplicationController
     #save the user to save new relationships
     current_user.save
 
-    #call the update_state task
-    update_state
+    #call run_tasks to laucnh scheduled tasks
+    run_tasks
 
     #inform the client this request was successful
     render :json => true
@@ -29,38 +29,29 @@ class ActivityController < ApplicationController
   end
 
   private
-  def update_state
-    close_votes_task = Task.find_by_name 'close_votes'
-    users_rooms_task = Task.find_by_name 'users_rooms'
+  def run_tasks
 
-    puts "--------------------------"
-    puts "launching update state"
-    puts "--------------------------"
+    puts '-----------------------------' 
+    puts 'Checking for scheduled Tasks'
+    puts '-----------------------------'
 
-    # binding.pry
+    #find all tasks
+    tasks = Task.all
 
-    if (close_votes_task.updated_at > close_votes_task.frequency.minutes.ago.utc)
-      #do nothing
-    else
-      Vote.check_to_close  
-      close_votes_task.counter += 1
-      close_votes_task.save
-      puts "--------------------------"
-      puts "launching close votes task"
-      puts "--------------------------"
+    tasks.each do |task|
+      unless (task.updated_at >= task.frequency.minutes.ago.utc)
+        puts '---------------------------------------------------------------------'
+        puts "Launching \"#{task.name}\" Task. Task has run #{task.counter} times."
+        puts '---------------------------------------------------------------------'
+        #run the command specified in the task
+        eval(task.command)
+        #increment the tasks run counter (this will update the last updated by)
+        task.counter += 1
+        #save the task
+        task.save
+      end
+
     end
-
-    if (users_rooms_task.updated_at > users_rooms_task.frequency.minutes.ago.utc)
-      #do nothing
-    else
-      User.check_inactive
-      users_rooms_task.counter += 1
-      users_rooms_task.save
-      puts "-------------------------"
-      puts "launching user rooms task"
-      puts "-------------------------"
-    end
-
 
   end
 

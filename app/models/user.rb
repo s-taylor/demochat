@@ -47,10 +47,13 @@ class User < ActiveRecord::Base
     puts "performing inactive users cleanup"
     #find inactive users (users who have not pinged the server within the last 60 seconds)
     inactive_users = self.where('last_active < ?',(Time.now.utc - 60))
-    # inactive_users = User.where('last_active < ?',(Time.now - 60))
 
     #set last active to nil and destroy User => Room relationship
     inactive_users.each do |user|
+      #log a message to the server
+      puts '---------------------------------------------------------------' 
+      puts "Dropping user: '#{user.username}' from rooms due to inavtivity"
+      puts '---------------------------------------------------------------'
       #clear the last active timestamp so user not picked up on next check
       user.last_active = nil
       #remove the rooms attached to the user

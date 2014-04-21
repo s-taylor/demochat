@@ -25,3 +25,11 @@
 <% else %>
   <p>You must <strong><%= link_to 'Login', new_user_session_path, :class => 'login' %></strong> to send messages</p>
 <% end %>
+
+<script type="text/underscore-template" id="message_template">
+  <li>{{= date }}: {{= username }}: {{= text }}</li>
+</script>
+
+<script type="text/underscore-template" id="user_template">
+  <li>{{= username }}</li>
+</script>

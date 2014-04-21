@@ -10,15 +10,29 @@ $(document).ready(function () {
   //setup dynatable
   $("#top-rooms").dynatable();
 
-  //--------------------------------------------
-  // CODE FOR ROOMS
-  //--------------------------------------------
+  //--------------------------------------------------
+  // CODE FOR ROOMS (ONLY APPLICABLE TO ROOMS - SHOW)
+  //--------------------------------------------------
 
   //set the room id
   demoChat.roomID = demoChat.getRoomID();
 
   //only run this code if the current page is a room
   if (demoChat.roomID !== -1) {
+
+    //change the default underscore template settings
+    _.templateSettings = {
+      interpolate: /\{\{\=(.+?)\}\}/g,
+      evaluate: /\{\{(.+?)\}\}/g
+    };
+
+    // fetch the html for our template from the index page
+    var message_html = $('#message_template').html();
+    demoChat.message_temp = _.template(message_html);
+
+    // fetch the html for our template from the index page
+    var user_html = $('#user_template').html();
+    demoChat.user_temp = _.template(user_html);
     
     //fetch the ul element on the page to append messages to
     demoChat.$userList = $('ul#users');
@@ -77,6 +91,12 @@ var demoChat = {
   //to store the current state of fetching requests (true = currently fetching messages)
   requestInProgress: false,
 
+  //to store our message template function
+  message_temp: undefined,
+
+  //to store our user template function
+  user_temp: undefined,
+
   //--------------------------------------------------------
   // FETCH MESSAGES AND USERS FOR THE ROOM AND UPDATES PAGE
   //--------------------------------------------------------
@@ -131,7 +151,7 @@ var demoChat = {
     //loop through all users
     _.each(users, function (user) {
       // add the message to the page
-      self.$userList.append(['<li>',user,'</li>'].join(''));
+      self.$userList.append(self.user_temp(user));
     });
   },
 
@@ -151,9 +171,9 @@ var demoChat = {
   //takes a single message object and adds it to the page
   addMessage: function (message) {
     //reformat the date using moment.js
-    var date = moment(message.date).format('d MMM - h:mma');
-    //append a message to the messages.ul
-    this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
+    message.date = moment(message.date).format('D MMM - h:mma');
+    //append a message to the messages.ul using the messages template
+    this.$messagesList.append(this.message_temp(message));
   },
 
   //------------------------------------------------------

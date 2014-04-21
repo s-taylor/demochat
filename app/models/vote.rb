@@ -54,6 +54,7 @@ class Vote < ActiveRecord::Base
   #---------------------------------------------
   # CLASS METHODS
 
+  #check for votes that need to close (where more than 5 minutes has passed)
   def self.check_to_close
     #current time minus 5 minutes (in UTC)
     time = Time.now.utc - (5 * 60)
@@ -68,14 +69,43 @@ class Vote < ActiveRecord::Base
     votes
   end
 
-  #check if a text string is a vote and return vote components as Regex
+  #check if message text is a vote and return vote components as Regex
   def self.check_msg(text)
     #return [1] = command, return [2] = target
     vote_text = /vote (.+) (.+)/.match text
   end
 
-  #check if the vote is valid (requires 'room' object, 'command' as text, 'target' as text)
-  def self.validate_msg(current_user, room, command, target)
+  #validate the vote and if valid, create it and an associated response
+  def self.message_to_vote(user, room, command, target)
+    #perform vote validation and retrieve output
+    result = Vote.validate_msg(user, room, command, target)
+
+    #create a system message, provide audience id if private
+    Message.system_msg(room, result[:message], result[:audience_id])
+
+    #if the vote is valid, create it
+    if result[:valid]
+      vote = Vote.create(
+        :category => command,
+        :target => result[:target],
+        :room_id => room.id,
+        :closed => false
+      )
+
+      #create a corresponding response for the vote
+      vote.present? && Response.create(
+        :vote_id => vote.id,
+        :user_id => user.id,
+        :choice => true,
+      )
+
+      #inform user a response was automatically recorded
+      Message.system_msg(room, "Your response of yes has automatically been recorded for your vote", user.id)
+    end
+  end
+
+  #check if the vote is valid
+  def self.validate_msg(user, room, command, target)
     #to store the output
     output = nil
 
@@ -97,17 +127,17 @@ class Vote < ActiveRecord::Base
           output = mute_valid(target_user)
         #mute target is invalid so error
         else
-          output = mute_invalid_target(current_user)
+          output = mute_invalid_target(user)
         end#if target_user
 
       #vote command is invalid so error
       else
-        output = command_invalid(current_user)
+        output = command_invalid(user)
       end#when "mute"
 
     #there is an open vote already  
     else
-      output = open_vote_exists(current_user)
+      output = open_vote_exists(user)
     end
 
     #return the output hash
