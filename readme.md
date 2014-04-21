@@ -144,7 +144,18 @@ Amazon S3 and Carrierwave to allow users to upload their own image files
 
 - - -
 
-###Bug List
+###Bug List or Fixes
+
+* User signup - if user gets initial signup details incorrect, it will prompt to re-enter but then result in an error page
+
+* Sign In -> Forgot your password -> Send me Password reset instructions (setup mail server to email user) Currently does nothing.
+
+* User Cancels Account - Need to cancel User without affecting the messages in chat rooms that the user created. Need to check the relationships on the user.destroy
+
+*Spaces in Chat Room name - Discussion over whether this is to be allowed for readability. Have to allow more characters in the name if this is the case
+
+*Auto Complete on main room input (homepage)
+
 
 
 - - -
