@@ -1,94 +1,97 @@
 <!DOCTYPE html>
+<!--
+    (  )   (   )  )
+      ) (   )  (  (
+      ( )  (    ) )
+      _____________
+     <_____________> ___
+     |             |/ _ \
+     |               | | |
+     |               |_| |
+  ___|             |\___/ 
+ /    \___________/    \
+ \_____________________/    Demochattic. cool!
+-->
 <html>
 <head>
-  <title>Demochat</title>
+  <title>Demochattic</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
+  <link href='http://fonts.googleapis.com/css?family=Poiret+One' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
-<div id="container">
-  <ul class="links clearfix">
-    <li><%= link_to 'Home', home_path %></li>
+  <div class="container">
+    <!-- <ul class="links clearfix"> -->
+    <div class="logo-container">
+      <a href="/"><img src="http://i29.photobucket.com/albums/c275/nixsiow/Demochattic_zps514b849e.png" class="logo"></a>
+    </div>
+
+    <%= button_to 'Home', home_path, :class => 'btn btn-info', :method => 'get' %>
 
     <div id="user">
       <% if user_signed_in? %>
-        <span><p>User signed in: <%= current_user.username %></p><p class="avatar"><%= image_tag current_user.image%></p></span>
-        <li><%= link_to 'Edit Profile', edit_user_registration_path, :class => 'edit' %></li>
-        <li><%= link_to 'Sign Out', destroy_user_session_path, :method => 'delete' %></li>
+        <div class="avatar">
+          <span><%= image_tag current_user.image%></span>
+          <h5><%= current_user.username %></h5>
+        </div>
+        
+        <button class="btn btn-primary" data-toggle="modal" data-target="#editModal">Edit</button>
+        <%= button_to 'Sign Out', destroy_user_session_path, :method => 'delete', :class => 'btn btn-danger' %>
       <% else %>
-        <li><%= link_to 'Login', new_user_session_path, :class => 'login' %></li><br>
-        <li><%= link_to 'Sign up', new_user_registration_path, :class => 'signup' %></li><br>
+        
+        <button class="btn btn-primary" data-toggle="modal" data-target="#signinModal">Sign in</button>
+        
+        <button class="btn btn-primary" data-toggle="modal" data-target="#signupModal">Sign up</button>
       <% end %>
     </div>
-  </ul>
-  <p><b>Test User details:</b> email = user1@user.com, password = abcd1234</p>
+    <!-- </ul> -->
 
-  <br>
+    <%= yield %>
 
-  <%= yield %>
+  </div>
 
-</div>
+
+<!-- blur effect -->
+
+<!-- Modal -->
+  <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="container">
+      <%= render :partial => 'devise/sessions/new' %>
+    </div>
+  </div>
+
+  <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="container">
+      <%= render :partial => 'devise/registrations/new' %>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="container">
+      <%= render :partial => 'devise/registrations/edit' %>
+    </div>
+  </div>
+
+
+
+
+<!-- stuff which is hiding -------------------------------------- -->
 
 <!-- if the user is signed in, start sending user activity messages -->
-<% if user_signed_in? %>
-  <script>
-    //start user activity timer
-    $(document).ready(function () {
-      demoChat.startUserActiveTimer();
-    });
-  </script>
-<% end %>
+  <% if user_signed_in? %>
+    <script>
+    demoChat.signedIn = true;
+      //start user activity timer
+      $(document).ready(function () {
+        demoChat.startUserActiveTimer();
+      });
+    </script>
+  <% end %>
 
 
-<!-- begin:for lightbox -->
-<div style='display:none'>
-  <div id='signin_form' style='padding:10px; background:#fff;'>
-    <%= render :partial => 'devise/sessions/new' %>
-  </div>
-  <div id='signup_form' style='padding:10px; background:#fff;'>
-    <%= render :partial => 'devise/registrations/new' %>
-  </div>
-  <div id='edit_form' style='padding:10px; background:#fff;'>
-    <%= render :partial => 'devise/registrations/edit' %>
-  </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        $('a.login').colorbox({inline:true, href:"#signin_form", opacity:0.5 , rel:'group1', closeButton: false, speed: 250});
-        $('a.signup').colorbox({inline:true, href:"#signup_form", opacity:0.5 , rel:'group1', closeButton: false, speed: 250});
-        $('a.edit').colorbox({inline:true, href:"#edit_form", opacity:0.5 , rel:'group1', closeButton: false, speed: 250});
-    });
-</script>
-<!-- end: for lightbox -->
-
-
-<!-- for fancy box -->
-<script>
-  // Capture TAB to switch between the Demo page views (input/textarea)
-  (function(){
-    var viewTogglers = $('menu.radio input');
-    
-    $(document).on('keydown', function(e){
-      if( e.key == 'tab' || e.keyCode == 9 ){
-        var $checked = viewTogglers.filter(':checked');
-        var $next = viewTogglers.eq(viewTogglers.index($checked) + 1);
-        if(!$next.length){
-          $next = viewTogglers.first();
-        }
-        $next.prop("checked", true).change();
-          
-        return false;
-      }
-    });
-  })();
-
-  $('section :input').val('').fancyInput()[0];
-  // $('section :input').val('').fancyInput()[0].focus();  // origin (delete if everthing is fine)
-</script>
 
 </body>
 </html>

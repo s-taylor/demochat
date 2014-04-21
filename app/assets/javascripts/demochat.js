@@ -28,11 +28,11 @@ $(document).ready(function () {
 
     // fetch the html for our template from the index page
     var message_html = $('#message_template').html();
-    demoChat.message_temp = _.template(message_html);
+    demoChat.messageTemp = _.template(message_html);
 
     // fetch the html for our template from the index page
     var user_html = $('#user_template').html();
-    demoChat.user_temp = _.template(user_html);
+    demoChat.userTemp = _.template(user_html);
     
     //fetch the ul element on the page to append messages to
     demoChat.$userList = $('ul#users');
@@ -41,7 +41,7 @@ $(document).ready(function () {
     demoChat.$messagesList = $('ul#messages');
 
     //find the input box on the page (for new message text)
-    var $msgInput = $('#msg-input');
+    demoChat.$msgInput = $('#msg-input');
 
     //when the page loads, get the messages
     demoChat.fetchData();
@@ -56,12 +56,24 @@ $(document).ready(function () {
       //prevent default form submit
       event.preventDefault();
       //grab text from the input box
-      var msgText = $msgInput.val();
+      var msgText = demoChat.$msgInput.val();
       //clear the input box
-      $msgInput.val('');
+      demoChat.$msgInput.val('');
+      //update the countdown (will reset back to 512)
+      demoChat.updateCountdown();
       //call the create message function
       demoChat.createMessage(msgText);
     });
+
+    //find the countdown text display
+    demoChat.$countdown = $('.countdown')
+    //add event handler for keypress on event handler
+    demoChat.updateCountdown();
+    //listen for keypresses on the update countdown
+    demoChat.$msgInput.keydown(function () {
+      demoChat.updateCountdown()
+    });
+
   }
 });
 
@@ -75,6 +87,9 @@ var demoChat = {
 
   //to store our messages list ul
   $messagesList: undefined,
+
+  //to track the message input box
+  $messageInput: undefined,
 
   //timer to periodically check for new messages
   messageTimer: undefined,
@@ -92,10 +107,16 @@ var demoChat = {
   requestInProgress: false,
 
   //to store our message template function
-  message_temp: undefined,
+  messageTemp: undefined,
 
   //to store our user template function
-  user_temp: undefined,
+  userTemp: undefined,
+
+  //user signed in (set in application.html.erb script tag)
+  signedIn: false,
+
+  //characters remaining in message
+  remaining: 512,
 
   //--------------------------------------------------------
   // FETCH MESSAGES AND USERS FOR THE ROOM AND UPDATES PAGE
@@ -109,7 +130,7 @@ var demoChat = {
     //if a request is already in progress, exit this method (don't run the remaining code)
     if (self.requestInProgress) {
       //Log that message fetch is being aborted
-      helper.log("Fetch: Abort! Request already in progress");
+      helper.log("Messages: Fetch aborted, request already in progress");
       return;
     }
 
@@ -117,7 +138,7 @@ var demoChat = {
     self.requestInProgress = true;
 
     //Log which messages are being fetched
-    helper.logArray(["Fetch: Requesting Messages with id > ",this.lastMsgID," and User List"]);
+    helper.logArray(["Messages: Fetch Messages with id > ",this.lastMsgID]);
 
     //submit ajax request to fetch all messages
     $.ajax({
@@ -151,7 +172,7 @@ var demoChat = {
     //loop through all users
     _.each(users, function (user) {
       // add the message to the page
-      self.$userList.append(self.user_temp(user));
+      self.$userList.append(self.userTemp(user));
     });
   },
 
@@ -173,7 +194,7 @@ var demoChat = {
     //reformat the date using moment.js
     message.date = moment(message.date).format('D MMM - h:mma');
     //append a message to the messages.ul using the messages template
-    this.$messagesList.append(this.message_temp(message));
+    this.$messagesList.append(this.messageTemp(message));
   },
 
   //------------------------------------------------------
@@ -235,6 +256,15 @@ var demoChat = {
         room_id: self.roomID
       }
     });
+  },
+
+  updateCountdown: function() {
+    //to refer to parent object
+    var self = this;
+    //set remaining = 512 - get the current length of input box
+    self.remaining = 512 - demoChat.$msgInput.val().length;
+    //update text on page
+    self.$countdown.text(self.remaining + ' characters remaining.');
   },
 
   //------------------------------------------------------

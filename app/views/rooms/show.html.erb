@@ -1,35 +1,43 @@
 <h2><%= @room.name %></h2>
 
-<h4>Users in this Room</h4>
-<ul id="users">
-</ul>
+<!-- <div>
+  <ul id="users"></ul>
+</div> -->
+<div class="chatroom">
+  <div class="participants">
+    <h5>Online users</h5>
+    <hr class="style">
+    <ul id="users" class="participant-list">
+      <li id="" class="participant-list-item offline">
+        <span class="participant-list-avatar" style="background-image: url();"></span>
+        <span class="participant-list-name">Nix</span>
+      </li>
+    </ul>
+  </div>
 
-<h4>Messages</h4>
-<ul id="messages">
-</ul>
-
+  <div class="messages_container">
+    <ul id="messages"></ul>
+  </div>
+</div>
 
 <% if user_signed_in? %>
-
-<!--   <form id="msg-form">
-    <input type="text" name="text" id="msg-input">
-  </form> -->
-
   <section class='textarea'>
     <form id="msg-form">
-      <!-- <textarea cols='1' placeholder="messages.."  id="msg-input"></textarea> -->
-      <input type="text" name="text" id="msg-input" required autofocus>
+      <textarea type="text" name="text" id="msg-input" autocomplete="off" placeholder="your message" required></textarea><br><span class="countdown"></span>
+      <button id="submit-button" class="button message-button--submit">Send</button>
     </form>
   </section>
-
 <% else %>
-  <p>You must <strong><%= link_to 'Login', new_user_session_path, :class => 'login' %></strong> to send messages</p>
+  <p>You must <strong><a href="" data-toggle="modal" data-target="#signinModal">Sign in</a></strong> to send messages</p>
 <% end %>
 
+
+
+
 <script type="text/underscore-template" id="message_template">
-  <li>{{= date }}: {{= username }}: {{= text }}</li>
+  <div class="indi_msg bg-primary"><p><small class="text"><i class="glyphicon glyphicon-time"></i>{{= date }}</small></p>{{= username }}: {{= text }}</div>
 </script>
 
 <script type="text/underscore-template" id="user_template">
-  <li>{{= username }}</li>
+  <li class="text-success">{{= username }}</li>
 </script>

@@ -1,33 +1,44 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="container">
+  <div class="login-container">
+    <h3 id="error-msg"></h3>
+    <div id="output"></div>
+    <h2>Edit <%= resource_name.to_s.humanize %></h2>
+    <div class="form-box">
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { :method => :put, :multipart => true }) do |f| %>
-  <%= devise_error_messages! %>
+      <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { :method => :put, :multipart => true }) do |f| %>
+        <%= devise_error_messages! %>
 
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, autofocus: true %></div>
+        <br>
+        <%= f.email_field :email, autofocus: true, :placeholder => 'email' %>
 
-  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-    <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-  <% end %>
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+        <% end %>
 
-  <div><%= f.label :image %> (Change Image)<br />
-  <%= f.file_field :image, :accept => "image/gif, image/jpeg, image/svg, image/jpg, image/png" %>
+        <div><br><%= f.label :image %> (Change Image)<br />
+        <%= f.file_field :image, :accept => "image/gif, image/jpeg, image/svg, image/jpg, image/png" %>
+        </div>
+
+        <div><br><br><%= f.label :password %> <i><br>(leave blank if you don't want to change it)</i><br />
+          <%= f.password_field :password, autocomplete: "off", :placeholder => 'new password' %></div>
+
+        <div><%= f.label :password_confirmation %><br />
+          <%= f.password_field :password_confirmation, autocomplete: "off", :placeholder => 'confirm new password' %></div>
+
+        <div><br><br><%= f.label :current_password %> <i><br>(we need your current password to confirm your changes)</i><br />
+          <%= f.password_field :current_password, autocomplete: "off", :placeholder => 'current password', :required => true %></div>
+
+        <div><%= f.submit "Update", :class => 'btn-success', :style => 'background:#00b300' %></div>
+      <% end %>
+
+      <br><br><h3>Cancel my account</h3>
+
+      <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, :class => 'btn btn-danger btn-block', :style => 'background:#ff303b' %></p>
+
+      <%= link_to "Back", :back %>
+
+
+    </div>
   </div>
+</div>
 
-  <div><%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
-    <%= f.password_field :password, autocomplete: "off" %></div>
-
-  <div><%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>
-
-  <div><%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "off" %></div>
-
-  <div><%= f.submit "Update" %></div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
-
-<%= link_to "Back", :back %>
