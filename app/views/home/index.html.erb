@@ -1,54 +1,39 @@
-<h1>Welcome to [insert name here]</h1>
+<div class="join_room_box">
+  <% if flash[:no_create_room] %>
+    <p class="welcome"> <%= flash[:no_create_room] %> </p>
+  <% end %>
 
-<div id='wrap'>
-  <header></header>
-  
-  <div id='content'>
-    <section class='input'>
-        <%= form_for @room do |f| %>
-            <%= f.text_field :name, :placeholder => 'Join a room', :autofocus => true, :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed" %>
-        <% end %>
-
-        <% if flash[:no_create_room] %>
-          <p class="welcome"> <%= flash[:no_create_room] %> </p>
-        <% end %>
-
-        <%= form_for @room do |f| %>
-            <%= f.label :name %>
-            <%= f.text_field :name %>
-        <% end %>
-
-        <% if @room.errors.any? %>
-          <div>
-            <p><b>Error:</b> Your Room could not be saved:</p>
-            <ul>
-              <% @room.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-    </section>
-  </div>
+  <%= form_for @room do |f| %>
+    <div class="input-group input-group-lg"><%= f.text_field :name, :placeholder => 'Join a room', :autofocus => true, :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed without spaces", :id => 'join_box', :class => 'form-control' %></div>
+  <% end %>
 </div>
 
+<br>
 
 <!-- Top rooms -->
-<h1> New Top 10 Chat Rooms</h1>
-	<table id="top-rooms">
-		<thead>
-		  <th>
-			<td>Room Name</td>
-			<td>Room Size (by users)</td>
-		  </th>
-		</thead>
+<div class="toptable">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Top Ranking Rooms</h3>
+        </div><br>
+      	<table id="top-rooms" class="table table-condensed">
+      		<thead>
+      		  <tr>
+      			<th>Room Name</th>
+      			<th>Active Users</th>
+      		  </tr>
+      		</thead>
 
-		<% @rooms.each do |room| %>
-		<tr>
-			<td></td>
-			<td><%= link_to room.name, room %></td>
-			<td><%= room.users.length %></td>
-		</tr>	
-		<% end %>
-	</table>	
-
+      		<% @rooms.each do |room| %>
+      		<tr>
+      			<td><%= link_to room.name, room %></td>
+      			<td><%= room.users.length %></td>
+      		</tr>
+      		<% end %>
+      	</table>	
+      </div>
+    </div>
+  </div>
+</div>

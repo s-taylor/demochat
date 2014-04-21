@@ -1203,13 +1203,15 @@
       var $search = $('<input />', {
             type: 'search',
             id: 'dynatable-query-search-' + obj.element.id,
+            'class': 'form-control',
             'data-dynatable-query': 'search',
+            placeholder: 'Search by name',
             value: settings.dataset.queries.search
           }),
           $searchSpan = $('<span></span>', {
             id: 'dynatable-search-' + obj.element.id,
-            'class': 'dynatable-search',
-            text: 'Search: '
+            'class': 'dynatable-search'
+            // text: ' Search: '
           }).append($search);
 
       $search

@@ -7,9 +7,6 @@ $(document).ready(function () {
   //setup js for a new page
   demoChat.newPage();
 
-  //setup dynatable
-  $("#top-rooms").dynatable();
-
   //--------------------------------------------
   // CODE FOR ROOMS
   //--------------------------------------------
@@ -89,7 +86,7 @@ var demoChat = {
     //if a request is already in progress, exit this method (don't run the remaining code)
     if (self.requestInProgress) {
       //Log that message fetch is being aborted
-      helper.log("Fetch: Abort! Request already in progress");
+      helper.log("Messages: Fetch aborted, request already in progress");
       return;
     }
 
@@ -97,7 +94,7 @@ var demoChat = {
     self.requestInProgress = true;
 
     //Log which messages are being fetched
-    helper.logArray(["Fetch: Requesting Messages with id > ",this.lastMsgID," and User List"]);
+    helper.logArray(["Messages: Fetch Messages with id > ",this.lastMsgID]);
 
     //submit ajax request to fetch all messages
     $.ajax({
@@ -131,7 +128,7 @@ var demoChat = {
     //loop through all users
     _.each(users, function (user) {
       // add the message to the page
-      self.$userList.append(['<li>',user,'</li>'].join(''));
+      self.$userList.append(['<li class="text-success">',user,'</li>'].join(''));
     });
   },
 
@@ -151,9 +148,9 @@ var demoChat = {
   //takes a single message object and adds it to the page
   addMessage: function (message) {
     //reformat the date using moment.js
-    var date = moment(message.date).format('d MMM - h:mma');
+    var date = moment(message.created_at).calendar();
     //append a message to the messages.ul
-    this.$messagesList.append(['<li>',date,': ',message.username,': ' ,message.text,'</li>'].join(''));
+    this.$messagesList.append(['<div class="indi_msg bg-primary"><p><small class="text"><i class="glyphicon glyphicon-time"></i> ',date,'</small></p>',message.username,': ' ,message.text,'</div>'].join(''));
   },
 
   //------------------------------------------------------
