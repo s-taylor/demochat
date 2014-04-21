@@ -135,12 +135,12 @@ Amazon S3 and Carrierwave to allow users to upload their own image files
 
 ###Acknowledgements
 
-**Joel Turnbull** - For helping us out with tonnes of questions. Particularly for saving us at the 11th hour regarding server side timers and also not going insane with our devise questions, despite him hating the gem!
+**Joel Turnbull** - For helping us out with tonnes of questions. Particularly for saving us at the 11th hour regarding server side timers and also not going insane with our devise questions, despite him hating the gem!. Also with validations, regex and dynatable... Legend-dary!
 
 
-**Mathilda Thompson** - For again helping out with our many many questions. In particular helping us with Carrierwave... yet again!
+**Mathilda Thompson** - For again helping out with our many many questions. In particular helping us with Carrierwave... yet again! We couldn't have done it without the big M!
 
-**Tarun Moohkey** - For giving us confidence that we don't need to freak out about using Web Sockets and that AJAX is OK.
+**Tarun Moohkey** - For giving us confidence that we don't need to freak out about using Web Sockets and that AJAX is OK. And also for declining to join OUR project team the 3 times we asked.
 
 - - -
 
@@ -152,10 +152,8 @@ Amazon S3 and Carrierwave to allow users to upload their own image files
 
 * User Cancels Account - Need to cancel User without affecting the messages in chat rooms that the user created. Need to check the relationships on the user.destroy
 
-*Spaces in Chat Room name - Discussion over whether this is to be allowed for readability. Have to allow more characters in the name if this is the case
+* Spaces in Chat Room name - Discussion over whether this is to be allowed for readability. Have to allow more characters in the name if this is the case
 
-*Auto Complete on main room input (homepage)
-
-
+* Auto Complete on main room input (homepage)
 
 - - -
