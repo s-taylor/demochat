@@ -1,33 +1,33 @@
-<h2><%= @room.name %></h2>
 
 <div class="chatroom">
+  <h2 class="white"><span><a href="/" class="white grow">Home  </a></span><span class="glyphicon glyphicon-chevron-right"></span>  <%= @room.name %></h2>
   <div class="participants">
-    <h5>Online users</h5>
+    <h5 class="grow text-primary">Online users</h5>
     <hr class="style">
     <ul id="users" class="participant-list">
       <li id="" class="participant-list-item offline">
-        <span class="participant-list-avatar" style="background-image: url();"></span>
-        <span class="participant-list-name">Nix</span>
       </li>
     </ul>
   </div>
 
   <div class="messages_container">
     <ul id="messages"></ul>
+    <a id="back-to-bottom" class="btn btn-primary btn-lg back-to-bottom" role="button" title="Click to return on the bottom page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-down"></span></a>
   </div>
 </div>
 
 <div class="msg-box hidden">
   <section class='textarea'>
     <form id="msg-form">
-      <textarea type="text" name="text" id="msg-input" autocomplete="off" placeholder="your message" required></textarea><br><span class="countdown"></span>
+      <small><span class="countdown"></span></small><br>
+      <textarea type="text" name="text" id="msg-input" autocomplete="off" placeholder="your message" required></textarea>
       <button id="submit-button" class="button message-button--submit hidden">Send</button>
     </form>
   </section>
 </div>
 
 <div class="msg-box">
-  <p>You must <strong><a href="" data-toggle="modal" data-target="#signinModal">Sign in</a></strong> to send messages</p>
+  <p class="white">You must <strong><a href="" data-toggle="modal" data-target="#signinModal">Sign in</a></strong> to send messages</p>
 </div>
 
 
@@ -35,9 +35,32 @@
 
 
 <script type="text/underscore-template" id="message_template">
-  <div class="indi_msg bg-primary"><p><small class="text"><i class="glyphicon glyphicon-time"></i> {{= date }}</small></p>{{= username }}: {{= text }}</div>
+  <div class="indi_msg bg-primary bubble-float-left"><p><small class="text"><i class="glyphicon glyphicon-time"></i> {{= date }}</small></p>{{= username }}: {{= text }}</div>
 </script>
 
 <script type="text/underscore-template" id="user_template">
-  <li class="text-success">{{= username }}</li>
+  <li class="text-success grow">{{= username }}</li><br>
+</script>
+
+<script>
+  $(document).ready(function(){
+    $('.messages_container').scroll(function () {
+      var $msg_cont = $('.messages_container');
+      if ($msg_cont.scrollTop() < ($msg_cont[0].scrollHeight * (70/100))) {
+        $('#back-to-bottom').fadeIn();
+      } else {
+        $('#back-to-bottom').fadeOut();
+      }
+    });
+    // scroll down to the bottom
+    $('#back-to-bottom').click(function () {
+      $('#back-to-bottom').tooltip('hide');
+      // scroll down to the bottom of messages
+      var scrollDown = function () {
+        var messagesContainer = $(".messages_container");
+        messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
+      };
+      scrollDown();
+    });
+  });
 </script>

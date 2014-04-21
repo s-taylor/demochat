@@ -240,6 +240,9 @@ var demoChat = {
     message.date = moment(message.date).format('D MMM - h:mma');
     //append a message to the messages.ul using the messages template
     this.$messagesList.append(this.messageTemp(message));
+    //always scroll to the latest message
+    var messagesContainer = $(".messages_container");
+    messagesContainer.scrollTop(messagesContainer[0].scrollHeight);
   },
 
   //------------------------------------------------------
@@ -339,7 +342,7 @@ var demoChat = {
     //set remaining = 512 - get the current length of input box
     self.remaining = 512 - demoChat.$msgInput.val().length;
     //update text on page
-    self.$countdown.text(self.remaining + ' characters remaining.');
+    self.$countdown.text(self.remaining + ' characters remaining');
   },
 
 

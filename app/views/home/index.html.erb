@@ -1,10 +1,32 @@
+<div class="container">
+  <div class="logo-container">
+    <a href="/"><img src="http://i29.photobucket.com/albums/c275/nixsiow/Demochattic_zps514b849e.png" class="logo rotate"></a>
+  </div>
+    <div id="user">
+      <% if user_signed_in? %>
+        <!-- do nothing -->
+      <% else %>
+        <div class="signout_view">
+          <button class="btn btn-primary grow" data-toggle="modal" data-target="#signinModal">Sign in</button>
+          
+          <button class="btn btn-primary grow" data-toggle="modal" data-target="#signupModal">Sign up</button>
+        </div>
+      <% end %>
+    </div>
+
+    <div id="current_user">
+
+    </div>
+</div>
+
+
 <div class="join_room_box">
   <% if flash[:no_create_room] %>
-    <p class="welcome"> <%= flash[:no_create_room] %> </p>
+    <p class="welcome white"> <%= flash[:no_create_room] %> </p>
   <% end %>
 
   <%= form_for @room do |f| %>
-    <div class="input-group input-group-lg"><%= f.text_field :name, :placeholder => 'Join a room', :autofocus => true, :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed without spaces", :id => 'join_box', :class => 'form-control' %></div>
+    <div class="input-group input-group-lg"><%= f.text_field :name, :placeholder => 'Join a room', :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed without spaces", :id => 'join_box', :class => 'form-control' %></div>
   <% end %>
 </div>
 
