@@ -1,8 +1,5 @@
 <h2><%= @room.name %></h2>
 
-<!-- <div>
-  <ul id="users"></ul>
-</div> -->
 <div class="chatroom">
   <div class="participants">
     <h5>Online users</h5>
@@ -20,22 +17,25 @@
   </div>
 </div>
 
-<% if user_signed_in? %>
+<div class="msg-box hidden">
   <section class='textarea'>
     <form id="msg-form">
       <textarea type="text" name="text" id="msg-input" autocomplete="off" placeholder="your message" required></textarea><br><span class="countdown"></span>
-      <button id="submit-button" class="button message-button--submit">Send</button>
+      <button id="submit-button" class="button message-button--submit hidden">Send</button>
     </form>
   </section>
-<% else %>
+</div>
+
+<div class="msg-box">
   <p>You must <strong><a href="" data-toggle="modal" data-target="#signinModal">Sign in</a></strong> to send messages</p>
-<% end %>
+</div>
+
 
 
 
 
 <script type="text/underscore-template" id="message_template">
-  <div class="indi_msg bg-primary"><p><small class="text"><i class="glyphicon glyphicon-time"></i>{{= date }}</small></p>{{= username }}: {{= text }}</div>
+  <div class="indi_msg bg-primary"><p><small class="text"><i class="glyphicon glyphicon-time"></i> {{= date }}</small></p>{{= username }}: {{= text }}</div>
 </script>
 
 <script type="text/underscore-template" id="user_template">

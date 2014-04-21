@@ -18,4 +18,7 @@ Demochat::Application.routes.draw do
   resources :votes, :only => [:index,:create,:show,:destroy]
 
   resources :responses, :only => [:index,:create,:show,:destroy]
+
+
+  get '/activity/user_details' => 'activity#user_details'
 end

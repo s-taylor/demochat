@@ -4,11 +4,41 @@ $(document).ready(function () {
   //Log that page load code is being run
   helper.log('Page: New Page Loaded');
 
+  //change the default underscore template settings
+  _.templateSettings = {
+    interpolate: /\{\{\=(.+?)\}\}/g,
+    evaluate: /\{\{(.+?)\}\}/g
+  };
+
   //setup js for a new page
   demoChat.newPage();
 
   //setup dynatable
   $("#top-rooms").dynatable();
+
+  var currentUserHtml = $('#current_user_template').html();
+  demoChat.currentUserTemp = _.template(currentUserHtml);
+
+  //when a sign in on the login form is successful
+  $("form#sign_in_user").bind("ajax:success", function(e, data, status, xhr) {
+    //check that the login was successful
+    if (data.success) {
+      //sign in successful so fetch user data via ajax
+      demoChat.fetchCurrentUser();
+      //hide the sign in form
+      $('#signinModal').modal('hide');
+    //login not succesful
+    } else {
+      //display error messages on the form
+      $('h3#error-msg').html(data.errors[0] + '<br>Incorrect email or password.');
+    }
+  });
+
+  //if the user is signed in, fetch their details
+  if (demoChat.signedIn) {
+    //fetch the current user data via ajax
+    demoChat.fetchCurrentUser();
+  }
 
   //--------------------------------------------------
   // CODE FOR ROOMS (ONLY APPLICABLE TO ROOMS - SHOW)
@@ -19,12 +49,6 @@ $(document).ready(function () {
 
   //only run this code if the current page is a room
   if (demoChat.roomID !== -1) {
-
-    //change the default underscore template settings
-    _.templateSettings = {
-      interpolate: /\{\{\=(.+?)\}\}/g,
-      evaluate: /\{\{(.+?)\}\}/g
-    };
 
     // fetch the html for our template from the index page
     var message_html = $('#message_template').html();
@@ -63,6 +87,21 @@ $(document).ready(function () {
       demoChat.updateCountdown();
       //call the create message function
       demoChat.createMessage(msgText);
+    });
+
+    $('#msg-form').on('keypress', function (event){
+      //if keypress is "enter"
+      if (event.keyCode === 13) {
+        //prevent default form submit
+        event.preventDefault();
+        var msgText = demoChat.$msgInput.val();
+        //clear the input box
+        demoChat.$msgInput.val('');
+        //update the countdown (will reset back to 512)
+        demoChat.updateCountdown();
+        //call the create message function
+        demoChat.createMessage(msgText);
+      }
     });
 
     //find the countdown text display
@@ -112,11 +151,17 @@ var demoChat = {
   //to store our user template function
   userTemp: undefined,
 
+  //to store our current user template function
+  currentUserTemp: undefined,
+
   //user signed in (set in application.html.erb script tag)
   signedIn: false,
 
   //characters remaining in message
   remaining: 512,
+
+  //current user json data
+  currentUser: undefined,
 
   //--------------------------------------------------------
   // FETCH MESSAGES AND USERS FOR THE ROOM AND UPDATES PAGE
@@ -240,7 +285,7 @@ var demoChat = {
     },60000);
   },
 
-  //ajax request to create a new message
+  //ajax request to inform the server the user is still here
   userActive: function() {
     //to refer to parent object
     var self = this;
@@ -258,6 +303,36 @@ var demoChat = {
     });
   },
 
+  //send ajax request to server to fetch current user details
+  fetchCurrentUser: function() {
+    // var self = this;
+    $.ajax({
+      url: '/activity/user_details',
+      type: 'GET', 
+      dataType: 'json'
+    }).done(function(response){
+      //Log the retrieved messages to console
+      console.log(response);
+    }).done(function(user) {
+      // console.log(user);
+      demoChat.currentUser = user;
+      //add the current user data to the page
+      demoChat.updateCurrentUser();
+    });
+  },
+
+  //update the current user on page
+  updateCurrentUser: function() {
+    //for testing : demoChat.currentUserTemp(demoChat.currentUser);
+    var self = this;
+    $('#current_user').append(self.currentUserTemp(self.currentUser));
+    $('div.signout_view').addClass('hidden');
+    $('.msg-box').toggleClass('hidden');
+  },
+  //------------------------------------------------------
+  // CHARACTERS REMAINING IN MESSAGE BOX
+  //------------------------------------------------------
+
   updateCountdown: function() {
     //to refer to parent object
     var self = this;
@@ -266,6 +341,8 @@ var demoChat = {
     //update text on page
     self.$countdown.text(self.remaining + ' characters remaining.');
   },
+
+
 
   //------------------------------------------------------
   // OTHER CODE

@@ -1,5 +1,17 @@
 class ActivityController < ApplicationController
 
+  #allow ajax requests to fetch details regarding signed in user
+  def user_details
+    if user_signed_in?
+      user = {}
+      user["username"] = current_user.username
+      user["image"] = current_user.image.url
+      render :json => user.to_json
+    else
+      render :json => false
+    end
+  end
+
   def userActive
     current_user.last_active = Time.now.utc
 

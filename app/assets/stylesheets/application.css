@@ -196,6 +196,12 @@ body.modal-open #wrap{
 .modal-backdrop {background: #f7f7f7;}
 
 
+
+.hidden {
+  display: none;
+}
+
+
 /* for sign in/signup page */
 
 .login-container{

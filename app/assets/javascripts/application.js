@@ -17,20 +17,3 @@
 //= require moment
 //= require_tree .
 
-$(document).ready(function () {
-  $("form#sign_in_user").bind("ajax:success", function(e, data, status, xhr) {
-    // debugger;
-    // console.log(data.errors);
-    if (data.success) {
-      // Update navigation to say "you are logged in as someuser@somesite.com"
-      $('#user').html('<p>User signed in:' + data.name + '</p>');
-      $('#user').append('<a href="/users/sign_out" data-method="delete">Sign Out</a>');
-      // $('#signinModal').attr('aria-hidden','false');
-      $('#signinModal').modal('hide');
-      
-    } else {
-      $('h3#error-msg').html(data.errors[0] + '<br>Incorrect email or password.');
-    }
-  });
-});
-
