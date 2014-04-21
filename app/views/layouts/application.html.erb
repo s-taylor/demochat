@@ -10,7 +10,7 @@
      |               |_| |
   ___|             |\___/ 
  /    \___________/    \
- \_____________________/    Demochattic. cool!
+ \_____________________/    Demochattic. cool !
 -->
 <html>
 <head>
@@ -24,12 +24,9 @@
 <body>
 
   <div class="container">
-    <!-- <ul class="links clearfix"> -->
     <div class="logo-container">
-      <a href="/"><img src="http://i29.photobucket.com/albums/c275/nixsiow/Demochattic_zps514b849e.png" class="logo"></a>
+      <a href="/"><img src="http://i29.photobucket.com/albums/c275/nixsiow/Demochattic_zps514b849e.png" class="logo rotate"></a>
     </div>
-
-    <%= button_to 'Home', home_path, :class => 'btn btn-info', :method => 'get' %>
 
     <div id="current_user">
 
@@ -37,16 +34,15 @@
 
     <div id="user">
       <% if user_signed_in? %>
-        <!-- do nothign -->
+        <!-- do nothing -->
       <% else %>
         <div class="signout_view">
-          <button class="btn btn-primary" data-toggle="modal" data-target="#signinModal">Sign in</button>
+          <button class="btn btn-primary grow" data-toggle="modal" data-target="#signinModal">Sign in</button>
           
-          <button class="btn btn-primary" data-toggle="modal" data-target="#signupModal">Sign up</button>
+          <button class="btn btn-primary grow" data-toggle="modal" data-target="#signupModal">Sign up</button>
         </div>
       <% end %>
     </div>
-    <!-- </ul> -->
 
     <%= yield %>
 
@@ -54,7 +50,6 @@
 
 
 <!-- blur effect -->
-
 <!-- Modal -->
   <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="container">
@@ -76,37 +71,34 @@
 
 
 
+  <!-- if the user is signed in, start sending user activity messages -->
+  <% if user_signed_in? %>
+    <script>
+      //if the user is signed in, set signed in to true
+      demoChat.signedIn = true;
+      //start user activity timer
+      $(document).ready(function () {
+        demoChat.startUserActiveTimer();
+      });
+    </script>
+  <% else %>
+    <script>
+      //if the user is signed in, set signed in to true
+      demoChat.signedIn = false;
+    </script>
+  <% end %>
 
-<!-- stuff which is hiding -------------------------------------- -->
-
-<!-- if the user is signed in, start sending user activity messages -->
-<% if user_signed_in? %>
-  <script>
-    //if the user is signed in, set signed in to true
-    demoChat.signedIn = true;
-    //start user activity timer
-    $(document).ready(function () {
-      demoChat.startUserActiveTimer();
-    });
+  <!-- template for current user details -->
+  <script type="text/underscore-template" id="current_user_template">
+    <kbd class="white">{{= username }}</kbd>
+    <div class="avatar">
+      {{ if (image !== null) { }}
+        <span><img src="{{= image }}"></span>
+      {{ } }}
+      <button class="btn btn-primary grow" data-toggle="modal" data-target="#editModal">Edit</button>
+      <%= button_to 'Sign Out', destroy_user_session_path, :method => 'delete', :class => 'btn btn-primary signout_btn grow' %>
+    </div>
   </script>
-<% else %>
-  <script>
-    //if the user is signed in, set signed in to true
-    demoChat.signedIn = false;
-  </script>
-<% end %>
-
-<!-- template for current user details -->
-<script type="text/underscore-template" id="current_user_template">
-  <div class="avatar">
-    {{ if (image !== null) { }}
-      <span><img src="{{= image }}"></span>
-    {{ } }}
-    <h5>{{= username }}</h5>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#editModal">Edit</button>
-    <%= button_to 'Sign Out', destroy_user_session_path, :method => 'delete', :class => 'btn btn-danger' %>
-  </div>
-</script>
 
 </body>
 </html>

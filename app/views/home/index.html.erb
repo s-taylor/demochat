@@ -4,7 +4,7 @@
   <% end %>
 
   <%= form_for @room do |f| %>
-    <div class="input-group input-group-lg"><%= f.text_field :name, :placeholder => 'Join a room', :autofocus => true, :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed without spaces", :id => 'join_box', :class => 'form-control' %></div>
+    <div class="input-group input-group-lg"><%= f.text_field :name, :placeholder => 'Join a room', :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed without spaces", :id => 'join_box', :class => 'form-control' %></div>
   <% end %>
 </div>
 
