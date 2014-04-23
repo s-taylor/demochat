@@ -52,6 +52,9 @@ class MessagesController < ApplicationController
     #it's not a vote or response, it's a message
     else
 
+      #html escape the message content
+      params[:message][:text] = CGI::escapeHTML(params[:message][:text])
+
       #create a new message
       message = current_user.messages.new(params[:message])
 
