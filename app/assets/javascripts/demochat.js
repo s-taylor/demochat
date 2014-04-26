@@ -75,6 +75,7 @@ $(document).ready(function () {
       demoChat.fetchData();
     },3000);
 
+    // Refactor lines 80-106 this code is not DRY
     //add event handler to monitor the input box
     $('#msg-form').on('submit', function (event) {
       //prevent default form submit

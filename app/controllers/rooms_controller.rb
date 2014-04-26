@@ -16,7 +16,7 @@ class RoomsController < ApplicationController
     else
       if current_user
         @room = Room.new(params[:room])
-        @room.save
+        # @room.save
         if @room.save
           redirect_to @room
         else
@@ -52,7 +52,7 @@ class RoomsController < ApplicationController
     end
 
     #reformat all messages 
-    response["messages"] = @messages.map { |message| message.json_format }
+    response["messages"] = @messages.map { |message| message.json_format } #@messages.map(&:json_format)
 
     #find all of the users for this room (returning username ONLY)
     response["users"] = Room.find(roomID).users.select('username')

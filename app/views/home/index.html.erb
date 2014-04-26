@@ -3,9 +3,8 @@
     <a href="/"><img src="http://i29.photobucket.com/albums/c275/nixsiow/Demochattic_zps514b849e.png" class="logo rotate"></a>
   </div>
     <div id="user">
-      <% if user_signed_in? %>
-        <!-- do nothing -->
-      <% else %>
+      <% unless user_signed_in? %> <!-- Refactor to use unless user_signed_in -->
+      <!-- put this into a nav partial -->
         <div class="signout_view">
           <button class="btn btn-primary grow" data-toggle="modal" data-target="#signinModal">Sign in</button>
           
@@ -24,7 +23,7 @@
   <% if flash[:no_create_room] %>
     <p class="welcome white"> <%= flash[:no_create_room] %> </p>
   <% end %>
-
+  <!-- Put the new_room form into a partial -->
   <%= form_for @room do |f| %>
     <div class="input-group input-group-lg"><%= f.text_field :name, :placeholder => 'Join a room', :pattern => ".{5,20}", :required => true, :title => "5 to 20 characters allowed without spaces", :id => 'join_box', :class => 'form-control' %></div>
   <% end %>
