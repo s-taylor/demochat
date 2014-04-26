@@ -9,18 +9,19 @@ class ApplicationController < ActionController::Base
   #-----------------------------------------
   #Devise: Redirects user to previous URL after sign in and sign out
 
-  def store_location
+  def store_location 
     # store last url - this is needed for post-login redirect to whatever the user last visited.
     if (request.fullpath != "/users/sign_in" &&
         request.fullpath != "/users/sign_up" &&
         request.fullpath != "/users/password" &&
-        request.fullpath != "/users/sign_out" &&
-        !request.xhr?) # don't store ajax calls
+        !request.xhr? && # don't store ajax calls
+        request.fullpath != "/users") 
       session[:previous_url] = request.fullpath 
     end
   end
 
   def after_sign_in_path_for(resource)
+    #Small bug locally, when I sign_up it redirects to '/users' which doesnt exist;
     session[:previous_url] || home_path
   end
 

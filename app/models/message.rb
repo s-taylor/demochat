@@ -12,7 +12,7 @@
 #
 
 class Message < ActiveRecord::Base
-  attr_accessible :room_id, :user_id, :text
+  attr_accessible :room_id, :user_id, :text, #Do you not need audience_id as an attr_accessible
 
   belongs_to :user
   belongs_to :room
@@ -43,7 +43,6 @@ class Message < ActiveRecord::Base
   #create system message (requires Room obj, text as string, audience id as int)
   def self.system_msg(room, text, audience_id=nil)
     system_user = User.where('username = ?','SYSTEM').first
-
     message = system_user.messages.new(:text => text)
     message.audience_id = audience_id
     message.room_id = room.id
